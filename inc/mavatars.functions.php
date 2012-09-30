@@ -13,7 +13,7 @@ defined('COT_CODE') or die('Wrong URL');
 /* @var $cache Cache */
 /* @var $t Xtemplate */
 
-global $db_mavatars, $mav_opts, $mav_struct, $mav_cfg, $R;
+global $db_mavatars, $db_x, $cfg, $R;
 
 $db_mavatars = $db_x . 'mavatars';
 require_once cot_langfile('mavatars');
@@ -68,6 +68,7 @@ class mavatar
 		$this->category = $category;
 		$this->code = $code;
 		$this->get_mavatars();
+		
 	}
 
 	protected function load_config_table()
@@ -170,6 +171,7 @@ class mavatar
 		{
 			$sql = $db->query("SELECT * FROM $db_mavatars WHERE mav_extension ='" . $db->prep($this->extension) . "' AND  mav_code = '" . $db->prep($this->code) . "' ORDER BY mav_order ASC, mav_item ASC");
 			$i = 0;
+			$mav_struct = array();
 			while ($mav_row = $sql->fetch())
 			{
 				$i++;
@@ -183,9 +185,8 @@ class mavatar
 					}
 					$mavatar[$keyx] = $val;
 				}
-				$mav_struct[$i] = $mavatar;
+				$this->mavatars[$i] = $mavatar;
 			}
-			$this->mavatars = $mav_struct;
 		}
 		return $this->mavatars;
 	}

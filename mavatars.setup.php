@@ -14,7 +14,7 @@
  * Lock_guests=W12345A
  * Auth_members=RW
  * Lock_members=
- * Requires_modules=page
+ * Recommends_modules=page
  * [END_COT_EXT]
 
  * [BEGIN_COT_EXT_CONFIG]

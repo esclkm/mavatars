@@ -1,6 +1,6 @@
 <!-- BEGIN: MAIN -->
-<script src="{PHP.cfg.plugins_dir}/mavatar/js/mavatar.admin.js" type="text/javascript"></script>	
-<div id="catgenerator" style="display:none"> <div style="display:none">{MAINCATEGORY}</div>
+<script src="{PHP.cfg.plugins_dir}/mavatars/js/mavatars.admin.js" type="text/javascript"></script>	
+<div id="catgenerator" style="display:none">
 	<table class="cells">
 		<tr>
 			<td class="coltop width10">{PHP.L.Extension}</td>
