@@ -185,6 +185,7 @@ class mavatar
 					}
 					$mavatar[$keyx] = $val;
 				}
+				$mavatar['i'] = $i;
 				$this->mavatars[$i] = $mavatar;
 			}
 		}
@@ -235,6 +236,7 @@ class mavatar
 				@unlink($file);
 			}
 		}
+		unset($this->mavatars[$mavatar['i']]);
 	}
 
 	public function delete_all_mavatars()
@@ -271,9 +273,9 @@ class mavatar
 	public function generate_upload_form()
 	{
 		global $cfg;
-		$mskin = cot_tplfile(array('mavatar', $this->extension, $this->category, $this->code));
+		$mskin = cot_tplfile(array('mavatars', 'form', $this->extension, $this->category, $this->code), 'plug');
 		$t = new XTemplate($mskin);
-
+		
 		foreach ($this->mavatars as $key => $mavatar)
 		{
 			$t->assign($this->generate_tags($mavatar));

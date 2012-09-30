@@ -19,9 +19,9 @@
 
  * [BEGIN_COT_EXT_CONFIG]
  * items=01:select:0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16:8:Attachments per post (max.)
- * set=02:textarea::||datas/page_mav|datas/page_mav|0||:Format settings cat|path|thumb path|reqiured|ext|mazfilesize
- * turnajax=98:radio::0:
- * turncurl=99:radio::0:
+ * set=99:textarea::||datas/page_mav|datas/page_mav|0||:Format settings cat|path|thumb path|reqiured|ext|mazfilesize
+ * turnajax=02:radio::0:
+ * turncurl=03:radio::0:
  * [END_COT_EXT_CONFIG]
  */
 /**
