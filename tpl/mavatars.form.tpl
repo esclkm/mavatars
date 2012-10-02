@@ -1,14 +1,15 @@
 <!-- BEGIN: MAIN -->
 <div>
-	{PHP.L.mavatar_form}
 	<!-- BEGIN: FILES -->
+	{PHP.L.mavatar_form_addedfiles}
 		<!-- BEGIN: ROW -->
-		<div>{ENABLED}{PHP.L.mavatar_file}: {FILEORDER} {PHP.L.Title}{FILEDESC}{FILENEW}</div>
+		<div>{ENABLED}#{FILEORDER} <a href="{FILE}">{FILEORIGNAME}.{FILEEXT}</a> {PHP.L.Desc}{FILEDESC}{FILENEW}</div>
 		<!-- END: ROW -->
 
 	<!-- END: FILES -->
 	
 	<!-- BEGIN: UPLOAD -->
+	{PHP.L.mavatar_form_addfiles}
 	<div>{FILEUPLOAD_INPUT}</div>
 	<div>{FILEUPLOAD_INPUT}</div>
 	<div>{FILEUPLOAD_INPUT}</div>
@@ -17,6 +18,7 @@
 	<!-- END: UPLOAD -->
 	
 	<!-- BEGIN: CURLUPLOAD -->
+	{PHP.L.mavatar_form_addcurl}
 	<div>{CURLUPLOAD_INPUT}</div>
 	<div>{CURLUPLOAD_INPUT}</div>	
 	<div>{CURLUPLOAD_INPUT}</div>	

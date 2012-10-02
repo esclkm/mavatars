@@ -20,7 +20,7 @@ require_once cot_incfile('mavatars', 'plug');
 
 if (!cot_error_found())
 {
-	$mavatar = new mavatar('page', $rpage['page_cat'], $rpage['page_id']);
+	$mavatar = new mavatar('page', $rpage['page_cat'], $id);
 	$mavatar->upload();
 	$mavatar->update();
 	

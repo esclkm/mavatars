@@ -20,5 +20,7 @@ $L['mav_size'] = "Макс. размер";
 $L['mav_fileext'] = "Расширения файлов";
 $L['mavatar_file'] = 'Изображение #';
 
-$L['mavatar_form'] = 'Прикрепить файлы';
+$L['mavatar_form_addedfiles'] = 'Прикрепленные файлы';
+$L['mavatar_form_addfiles'] = 'Прикрепить файлы';
+$L['mavatar_form_addcurl'] = 'Загрузить из интернета';
 ?>

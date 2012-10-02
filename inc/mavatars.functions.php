@@ -67,6 +67,7 @@ class mavatar
 		$this->extension = $extension;
 		$this->category = $category;
 		$this->code = $code;
+		
 		$this->get_mavatars();
 		
 	}
@@ -179,7 +180,7 @@ class mavatar
 				foreach ($mav_row as $key => $val)
 				{
 					$keyx = str_replace('mav_', '', $key);
-					if ($keyx = 'filepath' || $keyx = 'thumbpath')
+					if ($keyx == 'filepath' || $keyx == 'thumbpath')
 					{
 						$val .= (substr($val, -1) == '/') ? '' : '/';
 					}
@@ -206,19 +207,23 @@ class mavatar
 	public function get_mavatar_files($mavatar)
 	{
 		$file_list = array();
-		if (in_array($mavatar['fileext'], $this->images_ext))
+		if(!empty($mavatar['filepath']) && !empty($mavatar['filename']) && !empty($mavatar['fileext']))
 		{
-			$handle = opendir($mavatar['fileext']);
-			while (false !== ($file = readdir($handle)))
+			if (in_array($mavatar['fileext'], $this->images_ext))
 			{
-				$mt = array();
-				if (preg_match("/" . $mavatar['filename'] . "_(\d+)_(\d+)_(crop|width|height|auto)_?(.+)?\." . $mavatar['fileext'] . "/i", $file, $mt))
+				$handle = opendir($mavatar['fileext']);
+				while (false !== ($file = readdir($handle)))
 				{
-					$file_list[$mt[1] . '_' . $mt[2] . '_' . $mt[3] . '_' . $mt[4]] = $file;
+					$mt = array();
+					if (preg_match("/" . $mavatar['filename'] . "_(\d+)_(\d+)_(crop|width|height|auto)_?(.+)?\." . $mavatar['fileext'] . "/i", $file, $mt))
+					{
+						$file_list[$mt[1] . '_' . $mt[2] . '_' . $mt[3] . '_' . $mt[4]] = $file;
+					}
 				}
 			}
-		}
-		$file_list['main'] = $mavatar['filepath'] . $mavatar['filename'] . '.' . $mavatar['fileext'];
+			
+			$file_list['main'] = $mavatar['filepath'] . $mavatar['filename'] . '.' . $mavatar['fileext'];
+		}cot_print($file_list, $mavatar);
 		return $file_list;
 	}
 
@@ -227,9 +232,8 @@ class mavatar
 		global $db, $db_mavatars;
 
 		$db->delete($db_mavatars, "mav_id=" . $mavatar['id']);
-		$files = $this->get_mavatar_files();
 
-		foreach ($this->get_mavatar_files() as $key => $file)
+		foreach ($this->get_mavatar_files($mavatar) as $key => $file)
 		{
 			if (file_exists($file) && is_writable($file))
 			{
@@ -272,23 +276,25 @@ class mavatar
 
 	public function generate_upload_form()
 	{
-		global $cfg;
+		global $cfg, $L;
 		$mskin = cot_tplfile(array('mavatars', 'form', $this->extension, $this->category, $this->code), 'plug');
 		$t = new XTemplate($mskin);
-		
+
 		foreach ($this->mavatars as $key => $mavatar)
 		{
 			$t->assign($this->generate_tags($mavatar));
 			$t->assign(array(
-				'ENABLED' => cot_checkbox(true, 'mavatar_enabled[' . $mavatar['id'] . ']'),
-				'FILEORDER' => cot_inputbox('text', 'mavatar_order[' . $mavatar['id'] . ']', $mavatar['order']),
+				'ENABLED' => cot_checkbox(true, 'mavatar_enabled[' . $mavatar['id'] . ']', '', 'title="'.$L['Enabled'].'"'),
+				'FILEORDER' => cot_inputbox('text', 'mavatar_order[' . $mavatar['id'] . ']', $mavatar['order'], 'maxlength="4" size="4"'),
 				'FILEDESC' => cot_inputbox('text', 'mavatar_desc[' . $mavatar['id'] . ']', $mavatar['desc']),
 				'FILENEW' => cot_inputbox('hidden', 'mavatar_new[' . $mavatar['id'] . ']', 0),
 			));
 			$t->parse("MAIN.FILES.ROW");
 		}
-		$t->parse("MAIN.FILES");
-
+		if(count($this->mavatars) > 0)
+		{
+			$t->parse("MAIN.FILES");
+		}
 		$t->assign("FILEUPLOAD_INPUT", cot_inputbox('file', 'mavatar_file[]', ''));
 		$t->parse("MAIN.UPLOAD");
 		if ($cfg['jquery'] && $cfg['turnajax'] && $cfg['plugin']['mavatar']['turnajax'])
@@ -401,6 +407,7 @@ class mavatar
 			$file = $this->file_upload($file_object);
 			if ($file)
 			{
+				$order++;
 				$db->insert($db_mavatars, array(
 				'mav_userid' => $usr['id'],
 				'mav_extension' => $this->extension,
@@ -417,7 +424,6 @@ class mavatar
 				'mav_order' => $order,
 				'mav_type' => '',
 				));
-				$order++;
 			}
 		}
 		if ($cfg['plugin']['mavatar']['turncurl'])
@@ -433,24 +439,28 @@ class mavatar
 			}
 			foreach ($files_array as $key => $file_object)
 			{
-				$file = $this->curl_upload($file_object);
-				$db->insert($db_mavatars, array(
-				'mav_userid' => $usr['id'],
-				'mav_extension' => $this->extension,
-				'mav_category' => $this->category,
-				'mav_code' => $this->code,
-				'mav_item' => $this->item,
-				'mav_filepath' => $file['path'],
-				'mav_filename' => $file['name'],
-				'mav_fileext' => $file['extension'],
-				'mav_fileorigname' => $file['origname'],
-				'mav_thumbpath' => $this->thumbspath,
-				'mav_filesize' => $file['size'],
-				'mav_desc' => $file['origname'],
-				'mav_order' => $order,
-				'mav_type' => '',
-				));				
 				$order++;
+				$file = $this->curl_upload($file_object);
+				if ($file)
+				{
+					$order++;
+					$db->insert($db_mavatars, array(
+						'mav_userid' => $usr['id'],
+						'mav_extension' => $this->extension,
+						'mav_category' => $this->category,
+						'mav_code' => $this->code,
+						'mav_item' => $this->item,
+						'mav_filepath' => $file['path'],
+						'mav_filename' => $file['name'],
+						'mav_fileext' => $file['extension'],
+						'mav_fileorigname' => $file['origname'],
+						'mav_thumbpath' => $this->thumbspath,
+						'mav_filesize' => $file['size'],
+						'mav_desc' => $file['origname'],
+						'mav_order' => $order,
+						'mav_type' => '',
+					));	
+				}
 			}
 		}
 		//
@@ -460,17 +470,19 @@ class mavatar
 		global $db, $db_mavatars;
 		if($this->code != 'new')
 		{
-			$mavatars['mavatar_enabled'] = cot_import('mavatar_enabled', 'G', 'ARR');
-			$mavatars['mavatar_order'] = cot_import('mavatar_order', 'G', 'ARR');
-			$mavatars['mavatar_desc'] = cot_import('mavatar_desc', 'G', 'ARR');
-			$mavatars['mavatar_new'] = cot_import('mavatar_new', 'G', 'ARR');
-			foreach($mavatars['mavatar_enabled'] as $id => $enabled )
+
+			$mavatars['mav_enabled'] = cot_import('mavatar_enabled', 'P', 'ARR');
+			$mavatars['mav_order'] = cot_import('mavatar_order', 'P', 'ARR');
+			$mavatars['mav_desc'] = cot_import('mavatar_desc', 'P', 'ARR');
+			$mavatars['mav_new'] = cot_import('mavatar_new', 'P', 'ARR');
+
+			foreach($mavatars['mav_enabled'] as $id => $enabled )
 			{
-				$mavarar= array();
+				$mavatar= array();
 				$enabled = cot_import($enabled, 'D', 'BOL') ? true : false;
-				$mavatar['mavatar_order'] = cot_import($mavatars['mavatar_order'][$id], 'D', 'INT');
-				$mavatar['mavatar_desc'] = cot_import($mavatars['mavatar_desc'][$id], 'D', 'TXT');
-				$new = cot_import($mavatars['mavatar_new'][$id], 'D', 'BOL');
+				$mavatar['mav_order'] = cot_import($mavatars['mav_order'][$id], 'D', 'INT');
+				$mavatar['mav_desc'] = cot_import($mavatars['mav_desc'][$id], 'D', 'TXT');
+				$new = cot_import($mavatars['mav_new'][$id], 'D', 'BOL');
 				if($enabled)
 				{
 					if($new)
@@ -479,7 +491,7 @@ class mavatar
 						$mavatar['mav_category'] = $this->category;
 						$mavatar['mav_code'] = $this->code;
 					}
-					$db->update($db_mavatars, $mavatar, 'mavatar_id='.(int)$id);
+					$db->update($db_mavatars, $mavatar, 'mav_id='.(int)$id);
 				}
 				else
 				{
