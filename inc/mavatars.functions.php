@@ -223,7 +223,7 @@ class mavatar
 			}
 			
 			$file_list['main'] = $mavatar['filepath'] . $mavatar['filename'] . '.' . $mavatar['fileext'];
-		}cot_print($file_list, $mavatar);
+		}
 		return $file_list;
 	}
 
