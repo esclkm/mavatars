@@ -634,11 +634,6 @@ function cot_mav_thumb($object, $width, $height, $resize = 'crop', $filter = '',
 	{
 		return false;
 	}
-	$filepath = (!empty($object['fileext'])) ? $object['fileext'] : $mav_cfg['__default']['path'];
-	$filepath .= (substr($filepath, -1) == '/') ? '' : '/';
-
-	$thumbpath = (!empty($object['thumbpath'])) ? $object['thumbpath'] : $mav_cfg['__default']['thumbspath'];
-	$thumbpath .= (substr($object['thumbpath'], -1) == '/') ? '' : '/';
 
 	$source_file = $object['filepath'] . $object['filename'] . '.' . $object['fileext'];
 
@@ -756,13 +751,13 @@ function cot_mav_thumb($object, $width, $height, $resize = 'crop', $filter = '',
 	switch ($ext)
 	{
 		case 'gif':
-			imagegif($newimage, $target);
+			imagegif($newimage, $thumb_file);
 			break;
 		case 'png':
-			imagepng($newimage, $target);
+			imagepng($newimage, $thumb_file);
 			break;
 		default:
-			imagejpeg($newimage, $target, $quality);
+			imagejpeg($newimage, $thumb_file, $quality);
 			break;
 	}
 
