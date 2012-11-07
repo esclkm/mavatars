@@ -726,7 +726,7 @@ function cot_mav_thumb($object, $width, $height, $resize = 'crop', $filter = '',
 		$newimage = imagecreatetruecolor($width, $height); //
 	}
 
-	switch ($ext)
+	switch ($object['fileext'])
 	{
 		case 'gif':
 			$oldimage = imagecreatefromgif($source_file);
@@ -748,7 +748,7 @@ function cot_mav_thumb($object, $width, $height, $resize = 'crop', $filter = '',
 		$filter(&$newimage);
 	}
 
-	switch ($ext)
+	switch ($object['fileext'])
 	{
 		case 'gif':
 			imagegif($newimage, $thumb_file);
