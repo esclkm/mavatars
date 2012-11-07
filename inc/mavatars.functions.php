@@ -75,7 +75,7 @@ class mavatar
 	protected function load_config_table()
 	{
 		global $cfg;
-		$tpaset = str_replace("\r\n", "\n", $cfg['plugin']['mavatar']['set']);
+		$tpaset = str_replace("\r\n", "\n", $cfg['plugin']['mavatars']['set']);
 		$tpaset = explode("\n", $tpaset);
 		foreach ($tpaset as $val)
 		{
@@ -92,13 +92,13 @@ class mavatar
 				$val[1] = (empty($val[1])) ? '__default' : $val[1];
 
 				$val[5] = str_replace(' ', '', $val[5]);
-				$val[5] = explode(',', mb_strtolower($val[5]));
+				$extensions = explode(',', mb_strtolower($val[5]));
 
 				$set_array = array(
 					'path' => $val[2],
 					'thumbspath' => $val[3],
 					'req' => (int)$val[4] ? 1 : 0,
-					'ext' => (!empty($val[5])) ? explode(',', $val[5]) : $this->images_ext,
+					'ext' => (!empty($val[5])) ? $extensions : $this->images_ext,
 					'max' => ((int)$val[6] > 0) ? $val[6] : 0
 				);
 				$val[1] = empty($val[0]) ? '__default' : $val[1];
@@ -107,10 +107,11 @@ class mavatar
 			}
 		}
 		if (!$mav_cfg['__default']['__default'])
-		{
+		{	
+			$def_photodir = (substr($cfg['photos_dir'], -1) == '/') ? $cfg['photos_dir'] : $cfg['photos_dir'].'/';
 			$mav_cfg['__default']['__default'] = array(
-				'path' => $cfg['photos_dir'] . '/',
-				'thumbspath' => $cfg['photos_dir'] . '/',
+				'path' => $def_photodir,
+				'thumbspath' => $def_photodir,
 				'req' => 0,
 				'ext' => $this->images_ext,
 				'max' => 0
@@ -255,12 +256,12 @@ class mavatar
 	{
 		$curr_mavatar = array();
 		$curr_mavatar['FILE'] = $mavatar['filepath'] . $mavatar['filename'] . '.' . $mavatar['fileext'];
+		
 		foreach ($mavatar as $key_p => $val_p)
 		{
 			$keyx = mb_strtoupper($key_p);
 			$curr_mavatar[$keyx] = $val_p;
 		}
-
 		return $curr_mavatar;
 	}
 
@@ -297,11 +298,11 @@ class mavatar
 		}
 		$t->assign("FILEUPLOAD_INPUT", cot_inputbox('file', 'mavatar_file[]', ''));
 		$t->parse("MAIN.UPLOAD");
-		if ($cfg['jquery'] && $cfg['turnajax'] && $cfg['plugin']['mavatar']['turnajax'])
+		if ($cfg['jquery'] && $cfg['turnajax'] && $cfg['plugin']['mavatars']['turnajax'])
 		{
 			$t->parse("MAIN.AJAXUPLOAD");
 		}
-		if ($cfg['plugin']['mavatar']['turncurl'])
+		if ($cfg['plugin']['mavatars']['turncurl'])
 		{
 			$t->assign("CURLUPLOAD_INPUT", cot_inputbox('text', 'mavatar_curlfile[]', ''));
 			$t->parse("MAIN.CURLUPLOAD");
@@ -426,7 +427,7 @@ class mavatar
 				));
 			}
 		}
-		if ($cfg['plugin']['mavatar']['turncurl'])
+		if ($cfg['plugin']['mavatars']['turncurl'])
 		{
 			$files_array = array();
 			if(is_array($_GET['mavatar_curlfile']))

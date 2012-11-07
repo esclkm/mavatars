@@ -16,11 +16,11 @@
 		<tr class="newscat">
 			<td><input type="text" class="text ca_ext" name="ca_ext" value="{ADDMODULE}" size="32" maxlength="255" /></td>
 			<td><input type="text" class="text ca_cat" name="ca_cat" value="{ADDCATEGORY}" size="3" maxlength="255" /></td>
-			<td><input type="text" class="text ca_path" name="ca_path" value="{ADDPATH}" size="4" maxlength="4" /></td>
-			<td><input type="text" class="text ca_thumb" name="ca_thumb" value="{ADDTHUMBPATH}" size="4" maxlength="4" /></td>
+			<td><input type="text" class="text ca_path" name="ca_path" value="{ADDPATH}" size="4" maxlength="255" /></td>
+			<td><input type="text" class="text ca_thumb" name="ca_thumb" value="{ADDTHUMBPATH}" size="4" maxlength="255" /></td>
 			<td><input type="checkbox" class="ca_req" name="ca_req" value="{ADDREQ}" <!-- IF {ADDREQ} -->checked="checked"<!-- ENDIF --> /></td>
-			<td><input type="text" class="text ca_fileext" name="ca_ext" value="{ADDEXT}" size="4" maxlength="4" /></td>
-			<td><input type="text" class="text ca_size" name="ca_size" value="{ADDMAX}" size="4" maxlength="4" /></td>
+			<td><input type="text" class="text ca_fileext" name="ca_ext" value="{ADDEXT}" size="4" maxlength="255" /></td>
+			<td><input type="text" class="text ca_size" name="ca_size" value="{ADDMAX}" size="4" maxlength="255" /></td>
 			<td><a href="#" class="deloption negative button" style="display:none"><span class="trash icon"></span>{PHP.L.Delete}</a></td>
 		</tr>
 		<!-- END: ADDITIONAL -->
