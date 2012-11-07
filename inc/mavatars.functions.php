@@ -211,8 +211,9 @@ class mavatar
 		if(!empty($mavatar['filepath']) && !empty($mavatar['filename']) && !empty($mavatar['fileext']))
 		{
 			if (in_array($mavatar['fileext'], $this->images_ext))
-			{			
-				foreach (glob($mavatar['filepath'] . $mavatar['filename'] . "*." . $mavatar['fileext']) as $file) 
+			{		
+				//cot_print()
+				foreach (glob($mavatar['thumbpath'] . $mavatar['filename'] . "*." . $mavatar['fileext']) as $file) 
 				{
 					$filename = basename($file, '.' . $mavatar['fileext']);
 					$mt = array();
