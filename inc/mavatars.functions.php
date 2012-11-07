@@ -211,12 +211,12 @@ class mavatar
 		if(!empty($mavatar['filepath']) && !empty($mavatar['filename']) && !empty($mavatar['fileext']))
 		{
 			if (in_array($mavatar['fileext'], $this->images_ext))
-			{
-				$handle = opendir($mavatar['fileext']);
-				while (false !== ($file = readdir($handle)))
+			{			
+				foreach (glob($mavatar['filepath'] . $mavatar['filename'] . "*." . $mavatar['fileext']) as $file) 
 				{
+					$filename = basename($file, '.' . $mavatar['fileext']);
 					$mt = array();
-					if (preg_match("/" . $mavatar['filename'] . "_(\d+)_(\d+)_(crop|width|height|auto)_?(.+)?\." . $mavatar['fileext'] . "/i", $file, $mt))
+					if (preg_match("/" . $mavatar['filename'] . "_(\d+)_(\d+)_(crop|width|height|auto)_?(.+)?/i", $filename, $mt))
 					{
 						$file_list[$mt[1] . '_' . $mt[2] . '_' . $mt[3] . '_' . $mt[4]] = $file;
 					}
