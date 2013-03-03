@@ -81,7 +81,7 @@ class mavatar
 		{
 			$val = explode('|', $val);
 			$val = array_map('trim', $val);
-			if (!empty($val[0]))
+			if (count($val) > 1)
 			{
 				$val[2] = (!empty($val[2])) ? $val[2] : $cfg['photos_dir'];
 				$val[2] .= (substr($val[2], -1) == '/') ? '' : '/';
@@ -91,7 +91,7 @@ class mavatar
 
 				$val[1] = (empty($val[1])) ? '__default' : $val[1];
 
-				$val[5] = str_replace(' ', '', $val[5]);
+				$val[5] = str_replace(array(' ', '.', '*'), array('', '', ''), $val[5]);
 				$extensions = explode(',', mb_strtolower($val[5]));
 
 				$set_array = array(
@@ -314,6 +314,7 @@ class mavatar
 
 	public function curl_upload($file)
 	{
+		global $cfg;
 		$ch = curl_init();
 		$ch = curl_init($file);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -338,7 +339,7 @@ class mavatar
 			}
 			curl_close($ch);
 
-			if (!$this->file_check($file_fullname, $path_parts['extension']))
+			if (!$this->file_check($file_fullname, $path_parts['extension']) && $cfg['plugin']['mavatars']['filecheck'])
 			{
 				unlink($file_fullname);
 				return false;
@@ -359,13 +360,14 @@ class mavatar
 
 	function file_upload($file_object)
 	{
+		global $cfg;
 		$path_parts = pathinfo($file_object['name']);
 		$file_name = $path_parts['basename'];
 		if (!in_array($path_parts['extension'], $this->suppressed_ext) && in_array($path_parts['extension'], $this->ext))
 		{
 			$file_name = cot_safename($path_parts['basename'], $this->path);
 			$extension = mb_strtolower($path_parts['extension']);
-			if ($this->file_check($file_object['tmp_name'], $path_parts['extension']))
+			if ($this->file_check($file_object['tmp_name'], $path_parts['extension']) && $cfg['plugin']['mavatars']['filecheck'])
 			{
 				move_uploaded_file($file_object['tmp_name'], $this->path . $file_name);
 				$file_name = str_replace('.' . $extension, '', $file_name);
