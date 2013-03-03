@@ -367,7 +367,7 @@ class mavatar
 		{
 			$file_name = cot_safename($path_parts['basename'], $this->path);
 			$extension = mb_strtolower($path_parts['extension']);
-			if ($this->file_check($file_object['tmp_name'], $path_parts['extension']) && $cfg['plugin']['mavatars']['filecheck'])
+			if ($this->file_check($file_object['tmp_name'], $path_parts['extension']) || !$cfg['plugin']['mavatars']['filecheck'])
 			{
 				move_uploaded_file($file_object['tmp_name'], $this->path . $file_name);
 				$file_name = str_replace('.' . $extension, '', $file_name);
