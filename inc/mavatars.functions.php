@@ -748,7 +748,7 @@ function cot_mav_thumb($object, $width, $height, $resize = 'crop', $filter = '',
 
 	if (function_exists($filter))
 	{
-		$filter(&$newimage);
+		$filter($newimage);
 	}
 
 	switch ($object['fileext'])
