@@ -480,6 +480,8 @@ class mavatar
 			$mavatars['mav_desc'] = cot_import('mavatar_desc', 'P', 'ARR');
 			$mavatars['mav_new'] = cot_import('mavatar_new', 'P', 'ARR');
 
+			$mavatars['mav_enabled'] = (count($mavatars['mav_enabled']) > 0) ? $mavatars['mav_enabled'] : array();
+
 			foreach($mavatars['mav_enabled'] as $id => $enabled )
 			{
 				$mavatar= array();
