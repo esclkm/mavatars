@@ -329,7 +329,15 @@ class mavatar
 		if (!in_array($extension, $this->suppressed_ext) && in_array($path_parts['extension'], $this->ext))
 		{
 			$file_name = cot_safename($path_parts['basename'], $this->path);
-			$file_fullname = $this->path . $file_name;
+			$file_name = str_replace('.' . $extension, '', $file_name);
+			
+			if (file_exists($this->path . $file_name . '.' . $extension))
+			{
+				$file_name = $file_name . "_" . date("Ymd_His");
+			}
+			
+			$file_fullname = $this->path . $file_name . '.' . $extension;
+			
 // Check if any error occured 
 			if (curl_errno($ch))
 			{
@@ -344,7 +352,7 @@ class mavatar
 				unlink($file_fullname);
 				return false;
 			}
-			$file_name = str_replace('.' . $extension, '', $file_name);
+
 			return array(
 				'fullname' => $file_fullname,
 				'extension' => $extension,
@@ -367,12 +375,16 @@ class mavatar
 		{
 			$file_name = cot_safename($path_parts['basename'], $this->path);
 			$extension = mb_strtolower($path_parts['extension']);
+			$file_name = str_replace('.' . $extension, '', $file_name);
 			if ($this->file_check($file_object['tmp_name'], $path_parts['extension']) || !$cfg['plugin']['mavatars']['filecheck'])
 			{
-				move_uploaded_file($file_object['tmp_name'], $this->path . $file_name);
-				$file_name = str_replace('.' . $extension, '', $file_name);
+				if (file_exists($this->path . $file_name . '.' . $extension))
+				{
+					$file_name = $file_name . "_" . date("Ymd_His");
+				}
+				move_uploaded_file($file_object['tmp_name'], $this->path . $file_name . '.' . $extension);
 				return array(
-					'fullname' => $this->path . $file_name,
+					'fullname' => $this->path . $file_name . '.' . $extension,
 					'extension' => $extension,
 					'size' => $file_object['size'],
 					'path' => $this->path,
