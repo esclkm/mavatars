@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Pagemultiavatar for Cotonti CMF
+ * mavatars for Cotonti CMF
  *
  * @version 1.00
- * @author  esclkm, graber
- * @copyright (c) 2011 esclkm, graber
+ * @author	esclkm
+ * @copyright (c) 2013 esclkm
  */
 defined('COT_CODE') or die('Wrong URL');
 
@@ -171,7 +171,7 @@ class mavatar
 		$this->mavatars = array();
 		if ($this->code != 'new')
 		{
-			$sql = $db->query("SELECT * FROM $db_mavatars WHERE mav_extension ='" . $db->prep($this->extension) . "' AND  mav_code = '" . $db->prep($this->code) . "' ORDER BY mav_order ASC, mav_item ASC");
+			$sql = $db->query("SELECT * FROM $db_mavatars WHERE mav_extension ='" . $db->prep($this->extension) . "' AND	mav_code = '" . $db->prep($this->code) . "' ORDER BY mav_order ASC, mav_item ASC");
 			$i = 0;
 			$mav_struct = array();
 			while ($mav_row = $sql->fetch())
@@ -382,15 +382,17 @@ class mavatar
 				{
 					$file_name = $file_name . "_" . date("Ymd_His");
 				}
-				move_uploaded_file($file_object['tmp_name'], $this->path . $file_name . '.' . $extension);
-				return array(
-					'fullname' => $this->path . $file_name . '.' . $extension,
-					'extension' => $extension,
-					'size' => $file_object['size'],
-					'path' => $this->path,
-					'name' => $file_name,
-					'origname' => str_replace('.' . $path_parts['extension'], '', $file_object['name'])
-				);
+				if(move_uploaded_file($file_object['tmp_name'], $this->path . $file_name . '.' . $extension))
+				{
+					return array(
+						'fullname' => $this->path . $file_name . '.' . $extension,
+						'extension' => $extension,
+						'size' => $file_object['size'],
+						'path' => $this->path,
+						'name' => $file_name,
+						'origname' => str_replace('.' . $path_parts['extension'], '', $file_object['name'])
+					);
+				}
 			}
 			return false;
 		}
@@ -567,7 +569,7 @@ class mavatar
 	 */
 	function file_check($file, $ext)
 	{
-		global $L, $cfg;
+		global $L, $cfg, $mime_type;
 		require './datas/mimetype.php';
 		$fcheck = FALSE;
 		if (in_array($ext, array('jpg', 'jpeg', 'png', 'gif')))

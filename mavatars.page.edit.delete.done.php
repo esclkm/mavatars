@@ -17,7 +17,7 @@ defined('COT_CODE') or die('Wrong URL');
 
 require_once cot_incfile('mavatars', 'plug');
 
-$mavatar = new mavatar('page', $row_page['page_cat'], $row_page['page_id']);
+$mavatar = new mavatar('page', $rpage['page_cat'], $rpage['page_id']);
 $mavatar->delete_all_mavatars();
 $mavatar->get_mavatars();
 
