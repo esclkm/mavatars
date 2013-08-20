@@ -15,6 +15,13 @@ $L['cfg_turnajax'] = array('Включить аякс загрузку');
 $L['cfg_turncurl'] = array('Включить CURL загрузку');
 $L['cfg_filecheck'] = array('Проверять содержимое файлов');
 
+$L['cfg_separator_viewer'] = array('Настройка просмотрщика');
+$L['cfg_width'] = array('Ширина изображения');
+$L['cfg_height'] = array('Высота изображения');
+$L['cfg_method'] = array('Метод ресайза');
+$L['cfg_method_params'] = array('Кроппинг, Ширина, Высота, Авто');
+
+
 $L['mav_thumbpath'] = "Путь миниатюры";
 $L['mav_req'] = "Обязательная загрузка";
 $L['mav_size'] = "Макс. размер";
@@ -24,4 +31,3 @@ $L['mavatar_file'] = 'Изображение #';
 $L['mavatar_form_addedfiles'] = 'Прикрепленные файлы';
 $L['mavatar_form_addfiles'] = 'Прикрепить файлы';
 $L['mavatar_form_addcurl'] = 'Загрузить из интернета';
-?>

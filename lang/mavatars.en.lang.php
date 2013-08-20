@@ -11,7 +11,4 @@
 defined('COT_CODE') or die('Wrong URL.');
 
 $L['cfg_set'] = array('Settings matrix','category | path | thumb(s, space separated/format: prefix-width-height-cropping_type) | mandatory upload | extension(s, space separated) | max size');
-
 $L['mavatar_file'] = 'Image #';
-
-?>

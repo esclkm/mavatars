@@ -5,7 +5,7 @@
  * Code=mavatars
  * Name=MAvatars
  * Description=Adding files for cotonti modules
- * Version=1.1.1
+ * Version=1.2
  * Date=08-aug-2013
  * Author=esclkm littledev.ru, Antonio Graber
  * Copyright=(c)esclkm, Antonio Graber 
@@ -23,6 +23,10 @@
  * turnajax=02:radio::0:
  * turncurl=03:radio::0:
  * filecheck=04:radio::1:
+ * separator_viewer=90:separator:0:0:Viewer config
+ * width=91:string::800:Image width* 
+ * height=92:string::640:Image height
+ * method=93:select:crop,width,height,auto:width:Resize Method
  * [END_COT_EXT_CONFIG]
  */
 /**
@@ -69,4 +73,3 @@
  * 
  */
 defined('COT_CODE') or die('Wrong URL');
-?>

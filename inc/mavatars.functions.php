@@ -257,6 +257,7 @@ class mavatar
 	{
 		$curr_mavatar = array();
 		$curr_mavatar['FILE'] = $mavatar['filepath'] . $mavatar['filename'] . '.' . $mavatar['fileext'];
+		$curr_mavatar['SHOW'] = cot_url('plug', 'e=mavatars&m=show&id='.$mavatar['id']);
 		
 		foreach ($mavatar as $key_p => $val_p)
 		{
@@ -785,5 +786,3 @@ function cot_mav_thumb($object, $width, $height, $resize = 'crop', $filter = '',
 
 	return $thumb_file;
 }
-
-?>

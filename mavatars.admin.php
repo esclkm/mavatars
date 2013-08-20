@@ -56,4 +56,3 @@ if ($p == 'mavatars' && $config_name == 'set' && $cfg['jquery'])
 		'ADMIN_CONFIG_ROW_CONFIG_MORE' => $tt->text('MAIN') . '<div id="helptext">' . $config_more . '</div>'
 	));
 }
-?>

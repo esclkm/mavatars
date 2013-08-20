@@ -24,5 +24,3 @@ if (!cot_error_found())
 	$mavatar->update();
 	$mavatar->upload();	
 }
-
-?>

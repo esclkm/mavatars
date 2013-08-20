@@ -21,5 +21,3 @@ $mavatars_tags = $mavatar->generate_mavatars_tags();
 
 $temp_array['MAVATAR'] = $mavatars_tags;
 $temp_array['MAVATARCOUNT'] = count($mavatars_tags);
-
-?>

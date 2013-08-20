@@ -33,5 +33,3 @@ else
 $mavatar = new mavatar('page', $category, $code);
 
 $t->assign('PAGE'.$mavpr.'_FORM_MAVATAR', $mavatar->generate_upload_form());
-
-?>

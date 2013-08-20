@@ -20,5 +20,3 @@ require_once cot_incfile('mavatars', 'plug');
 $mavatar = new mavatar('page', $rpage['page_cat'], $rpage['page_id']);
 $mavatar->delete_all_mavatars();
 $mavatar->get_mavatars();
-
-?>

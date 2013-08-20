@@ -43,5 +43,10 @@ function file_force_download($file) {
     exit;
   }
 }
+// Mode choice
+if (!in_array($m, array()))
+{
+	$m = 'show';
+}
 
-?>
+require_once cot_incfile('mavatars', 'plug', $m);
