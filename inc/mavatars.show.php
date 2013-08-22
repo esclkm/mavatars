@@ -55,6 +55,13 @@ if ($mav_row = $sql->fetch())
 		'FILE' => $mavatar['file']
 		));
 	
+	/* === Hook === */
+	foreach (cot_getextplugins('mavatars.show.tags') as $pl)
+	{
+		include $pl;
+	}
+	/* ===== */
+	
 }
 else
 {
