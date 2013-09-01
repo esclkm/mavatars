@@ -44,7 +44,7 @@ function file_force_download($file) {
   }
 }
 // Mode choice
-if (!in_array($m, array()))
+if (!in_array($m, array('edit')))
 {
 	$m = 'show';
 }

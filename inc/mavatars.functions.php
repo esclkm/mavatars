@@ -299,10 +299,15 @@ class mavatar
 			$t->parse("MAIN.FILES");
 		}
 		$t->assign("FILEUPLOAD_INPUT", cot_inputbox('file', 'mavatar_file[]', ''));
-		$t->parse("MAIN.UPLOAD");
+		
 		if ($cfg['jquery'] && $cfg['turnajax'] && $cfg['plugin']['mavatars']['turnajax'])
 		{
+			$t->assign("FILEUPLOAD_URL", cot_url('plug', 'r=mavatars&m=upload&ext='.$this->extension.'&cat='.$this->category.'&code='.$this->code.'&'.cot_xg(), '', true));
 			$t->parse("MAIN.AJAXUPLOAD");
+		}
+		else
+		{
+			$t->parse("MAIN.UPLOAD");
 		}
 		if ($cfg['plugin']['mavatars']['turncurl'])
 		{
@@ -398,6 +403,82 @@ class mavatar
 			return false;
 		}
 		return false;
+	}
+
+	function ajax_upload()
+	{
+
+		global $db, $db_mavatars;
+		$order = count($this->mavatars);
+		$file_object = array();
+		if (is_array($_FILES['mavatar_file']['name']))
+		{
+			$file_object['name'] = $_FILES['mavatar_file']['name'][0];
+			$file_object['tmp_name'] = $_FILES['mavatar_file']['tmp_name'][0];
+			$file_object['size'] = $_FILES['mavatar_file']['size'][0];
+			$file_object['error'] = $_FILES['mavatar_file']['error'][0];
+		}
+		else
+		{
+			$file_object = $_FILES['mavatar_file'];
+		}
+
+		$file = $this->file_upload($file_object);
+		if ($file)
+		{
+			$order++;
+			$mavarray = array(
+			'mav_userid' => $usr['id'],
+			'mav_extension' => $this->extension,
+			'mav_category' => $this->category,
+			'mav_code' => $this->code,
+			'mav_item' => $this->item,
+			'mav_filepath' => $file['path'],
+			'mav_filename' => $file['name'],
+			'mav_fileext' => $file['extension'],
+			'mav_fileorigname' => $file['origname'],
+			'mav_thumbpath' => $this->thumbspath,
+			'mav_filesize' => $file['size'],
+			'mav_desc' => $file['origname'],
+			'mav_order' => $order,
+			'mav_type' => '',
+			);
+			$db->insert($db_mavatars, $mavarray);
+			$mavarray['mav_id'] = $db->lastInsertId();	
+		}
+
+		$mavatar = array();
+		foreach ($mavarray as $key => $val)
+		{
+			$keyx = str_replace('mav_', '', $key);
+			if ($keyx == 'filepath' || $keyx == 'thumbpath')
+			{
+				$val .= (substr($val, -1) == '/') ? '' : '/';
+			}
+			$mavatar[$keyx] = $val;
+		}
+		$mskin = cot_tplfile(array('mavatars', 'form', $this->extension, $this->category, $this->code), 'plug');
+		$t = new XTemplate($mskin);
+
+		$t->assign($this->generate_tags($mavatar));
+		$t->assign(array(
+			'ENABLED' => cot_checkbox(true, 'mavatar_enabled[' . $mavatar['id'] . ']', '', 'title="'.$L['Enabled'].'"'),
+			'FILEORDER' => cot_inputbox('text', 'mavatar_order[' . $mavatar['id'] . ']', $mavatar['order'], 'maxlength="4" size="4"'),
+			'FILEDESC' => cot_inputbox('text', 'mavatar_desc[' . $mavatar['id'] . ']', $mavatar['desc']),
+			'FILENEW' => cot_inputbox('hidden', 'mavatar_new[' . $mavatar['id'] . ']', 0),
+		));
+		$t->parse("MAIN.FILES.ROW");
+		if ($this->mavatars)
+		{
+			$mavatar['form'] = htmlspecialchars($t->text("MAIN.FILES.ROW"));
+		}	
+		else
+		{
+			$t->parse("MAIN.FILES");
+			$mavatar['form'] = htmlspecialchars($t->text("MAIN.FILES"));
+		}
+		$mavatar['success'] = 1;
+		return $mavatar;
 	}
 
 	function upload()
