@@ -15,7 +15,7 @@ defined('COT_CODE') or die('Wrong URL');
 
 global $db_mavatars, $db_x, $cfg, $R;
 
-$db_mavatars = $db_x . 'mavatars';
+$db_mavatars = $db_x.'mavatars';
 require_once cot_langfile('mavatars');
 
 require_once cot_incfile('uploads');
@@ -23,6 +23,7 @@ require_once cot_incfile('forms');
 
 class mavatar
 {
+
 	/**
 	 * @var array Total mavatar config
 	 */
@@ -56,7 +57,7 @@ class mavatar
 	private $path = '';
 	private $thumbspath = '';
 	private $req = '';
-	private $ext = '';
+	private $allowed_ext = '';
 	private $max = '';
 
 	public function __construct($extension, $category, $code)
@@ -67,9 +68,8 @@ class mavatar
 		$this->extension = $extension;
 		$this->category = $category;
 		$this->code = $code;
-		
+
 		$this->get_mavatars();
-		
 	}
 
 	protected function load_config_table()
@@ -107,7 +107,7 @@ class mavatar
 			}
 		}
 		if (!$mav_cfg['__default']['__default'])
-		{	
+		{
 			$def_photodir = (substr($cfg['photos_dir'], -1) == '/') ? $cfg['photos_dir'] : $cfg['photos_dir'].'/';
 			$mav_cfg['__default']['__default'] = array(
 				'path' => $def_photodir,
@@ -161,7 +161,7 @@ class mavatar
 		$this->path = $this->config[$extension][$category]['path'];
 		$this->thumbspath = $this->config[$extension][$category]['thumbspath'];
 		$this->req = $this->config[$extension][$category]['req'];
-		$this->ext = $this->config[$extension][$category]['ext'];
+		$this->allowed_ext = $this->config[$extension][$category]['ext'];
 		$this->max = $this->config[$extension][$category]['max'];
 	}
 
@@ -171,7 +171,7 @@ class mavatar
 		$this->mavatars = array();
 		if ($this->code != 'new')
 		{
-			$sql = $db->query("SELECT * FROM $db_mavatars WHERE mav_extension ='" . $db->prep($this->extension) . "' AND	mav_code = '" . $db->prep($this->code) . "' ORDER BY mav_order ASC, mav_item ASC");
+			$sql = $db->query("SELECT * FROM $db_mavatars WHERE mav_extension ='".$db->prep($this->extension)."' AND	mav_code = '".$db->prep($this->code)."' ORDER BY mav_order ASC, mav_item ASC");
 			$i = 0;
 			$mav_struct = array();
 			while ($mav_row = $sql->fetch())
@@ -208,23 +208,22 @@ class mavatar
 	public function get_mavatar_files($mavatar)
 	{
 		$file_list = array();
-		if(!empty($mavatar['filepath']) && !empty($mavatar['filename']) && !empty($mavatar['fileext']))
+		if (!empty($mavatar['filepath']) && !empty($mavatar['filename']) && !empty($mavatar['fileext']))
 		{
 			if (in_array($mavatar['fileext'], $this->images_ext))
-			{		
-				//cot_print()
-				foreach (glob($mavatar['thumbpath'] . $mavatar['filename'] . "*." . $mavatar['fileext']) as $file) 
+			{
+				foreach (glob($mavatar['thumbpath'].$mavatar['filename']."*.".$mavatar['fileext']) as $file)
 				{
-					$filename = basename($file, '.' . $mavatar['fileext']);
+					$filename = basename($file, '.'.$mavatar['fileext']);
 					$mt = array();
-					if (preg_match("/" . $mavatar['filename'] . "_(\d+)_(\d+)_(crop|width|height|auto)_?(.+)?/i", $filename, $mt))
+					if (preg_match("/".$mavatar['filename']."_(\d+)_(\d+)_(crop|width|height|auto)_?(.+)?/i", $filename, $mt))
 					{
-						$file_list[$mt[1] . '_' . $mt[2] . '_' . $mt[3] . '_' . $mt[4]] = $file;
+						$file_list[$mt[1].'_'.$mt[2].'_'.$mt[3].'_'.$mt[4]] = $file;
 					}
 				}
 			}
-			
-			$file_list['main'] = $mavatar['filepath'] . $mavatar['filename'] . '.' . $mavatar['fileext'];
+
+			$file_list['main'] = $mavatar['filepath'].$mavatar['filename'].'.'.$mavatar['fileext'];
 		}
 		return $file_list;
 	}
@@ -233,7 +232,7 @@ class mavatar
 	{
 		global $db, $db_mavatars;
 
-		$db->delete($db_mavatars, "mav_id=" . $mavatar['id']);
+		$db->delete($db_mavatars, "mav_id=".$mavatar['id']);
 
 		foreach ($this->get_mavatar_files($mavatar) as $key => $file)
 		{
@@ -256,9 +255,9 @@ class mavatar
 	public function generate_tags($mavatar)
 	{
 		$curr_mavatar = array();
-		$curr_mavatar['FILE'] = $mavatar['filepath'] . $mavatar['filename'] . '.' . $mavatar['fileext'];
+		$curr_mavatar['FILE'] = $mavatar['filepath'].$mavatar['filename'].'.'.$mavatar['fileext'];
 		$curr_mavatar['SHOW'] = cot_url('plug', 'e=mavatars&m=show&id='.$mavatar['id']);
-		
+
 		foreach ($mavatar as $key_p => $val_p)
 		{
 			$keyx = mb_strtoupper($key_p);
@@ -287,19 +286,19 @@ class mavatar
 		{
 			$t->assign($this->generate_tags($mavatar));
 			$t->assign(array(
-				'ENABLED' => cot_checkbox(true, 'mavatar_enabled[' . $mavatar['id'] . ']', '', 'title="'.$L['Enabled'].'"'),
-				'FILEORDER' => cot_inputbox('text', 'mavatar_order[' . $mavatar['id'] . ']', $mavatar['order'], 'maxlength="4" size="4"'),
-				'FILEDESC' => cot_inputbox('text', 'mavatar_desc[' . $mavatar['id'] . ']', $mavatar['desc']),
-				'FILENEW' => cot_inputbox('hidden', 'mavatar_new[' . $mavatar['id'] . ']', 0),
+				'ENABLED' => cot_checkbox(true, 'mavatar_enabled['.$mavatar['id'].']', '', 'title="'.$L['Enabled'].'"'),
+				'FILEORDER' => cot_inputbox('text', 'mavatar_order['.$mavatar['id'].']', $mavatar['order'], 'maxlength="4" size="4"'),
+				'FILEDESC' => cot_inputbox('text', 'mavatar_desc['.$mavatar['id'].']', $mavatar['desc']),
+				'FILENEW' => cot_inputbox('hidden', 'mavatar_new['.$mavatar['id'].']', 0),
 			));
 			$t->parse("MAIN.FILES.ROW");
 		}
-		if(count($this->mavatars) > 0)
+		if (count($this->mavatars) > 0)
 		{
 			$t->parse("MAIN.FILES");
 		}
 		$t->assign("FILEUPLOAD_INPUT", cot_inputbox('file', 'mavatar_file[]', ''));
-		
+
 		if ($cfg['jquery'] && $cfg['turnajax'] && $cfg['plugin']['mavatars']['turnajax'])
 		{
 			$t->assign("FILEUPLOAD_URL", cot_url('plug', 'r=mavatars&m=upload&ext='.$this->extension.'&cat='.$this->category.'&code='.$this->code.'&'.cot_xg(), '', true));
@@ -332,18 +331,18 @@ class mavatar
 		$path_parts = pathinfo($path);
 		$file_name = $path_parts['basename'];
 		$extension = mb_strtolower($path_parts['extension']);
-		if (!in_array($extension, $this->suppressed_ext) && in_array($path_parts['extension'], $this->ext))
+		if (!in_array($extension, $this->suppressed_ext) && in_array($path_parts['extension'], $this->allowed_ext))
 		{
 			$file_name = cot_safename($path_parts['basename'], $this->path);
-			$file_name = str_replace('.' . $extension, '', $file_name);
-			
-			if (file_exists($this->path . $file_name . '.' . $extension))
+			$file_name = str_replace('.'.$extension, '', $file_name);
+
+			if (file_exists($this->path.$file_name.'.'.$extension))
 			{
-				$file_name = $file_name . "_" . date("Ymd_His");
+				$file_name = $file_name."_".date("Ymd_His");
 			}
-			
-			$file_fullname = $this->path . $file_name . '.' . $extension;
-			
+
+			$file_fullname = $this->path.$file_name.'.'.$extension;
+
 // Check if any error occured 
 			if (curl_errno($ch))
 			{
@@ -365,7 +364,7 @@ class mavatar
 				'size' => filesize($file_fullname),
 				'path' => $this->path,
 				'name' => $file_name,
-				'origname' => str_replace('.' . $path_parts['extension'], '', $path_parts['basename'])
+				'origname' => str_replace('.'.$path_parts['extension'], '', $path_parts['basename'])
 			);
 		}
 
@@ -377,32 +376,56 @@ class mavatar
 		global $cfg;
 		$path_parts = pathinfo($file_object['name']);
 		$file_name = $path_parts['basename'];
-		if (!in_array($path_parts['extension'], $this->suppressed_ext) && in_array($path_parts['extension'], $this->ext))
+		if (!in_array($path_parts['extension'], $this->suppressed_ext) && in_array($path_parts['extension'], $this->allowed_ext))
 		{
 			$file_name = cot_safename($path_parts['basename'], $this->path);
 			$extension = mb_strtolower($path_parts['extension']);
-			$file_name = str_replace('.' . $extension, '', $file_name);
+			$file_name = str_replace('.'.$extension, '', $file_name);
 			if ($this->file_check($file_object['tmp_name'], $path_parts['extension']) || !$cfg['plugin']['mavatars']['filecheck'])
 			{
-				if (file_exists($this->path . $file_name . '.' . $extension))
+				if (file_exists($this->path.$file_name.'.'.$extension))
 				{
-					$file_name = $file_name . "_" . date("Ymd_His");
+					$file_name = $file_name."_".date("Ymd_His");
 				}
-				if(move_uploaded_file($file_object['tmp_name'], $this->path . $file_name . '.' . $extension))
+				if (move_uploaded_file($file_object['tmp_name'], $this->path.$file_name.'.'.$extension))		
 				{
 					return array(
-						'fullname' => $this->path . $file_name . '.' . $extension,
+						'fullname' => $this->path.$file_name.'.'.$extension,
 						'extension' => $extension,
 						'size' => $file_object['size'],
 						'path' => $this->path,
 						'name' => $file_name,
-						'origname' => str_replace('.' . $path_parts['extension'], '', $file_object['name'])
+						'origname' => str_replace('.'.$path_parts['extension'], '', $file_object['name'])
 					);
 				}
 			}
 			return false;
 		}
 		return false;
+	}
+	
+	function mavatar_add($file, $desc='',$order=0, $type='')
+	{
+		global $db, $db_mavatars;
+		$mavarray = array(
+			'mav_userid' => $usr['id'],
+			'mav_extension' => $this->extension,
+			'mav_category' => $this->category,
+			'mav_code' => $this->code,
+			'mav_item' => $this->item,
+			'mav_filepath' => $file['path'],
+			'mav_filename' => $file['name'],
+			'mav_fileext' => $file['extension'],
+			'mav_fileorigname' => $file['origname'],
+			'mav_thumbpath' => $this->thumbspath,
+			'mav_filesize' => $file['size'],
+			'mav_desc' => empty($desc) ? $file['origname'] : $desc,
+			'mav_order' => $order,
+			'mav_type' => $type,
+		);
+		$db->insert($db_mavatars, $mavarray);
+		$mavarray['mav_id'] = $db->lastInsertId();
+		return $mavarray;
 	}
 
 	function ajax_upload()
@@ -422,31 +445,12 @@ class mavatar
 		{
 			$file_object = $_FILES['mavatar_file'];
 		}
-
 		$file = $this->file_upload($file_object);
 		if ($file)
 		{
 			$order++;
-			$mavarray = array(
-			'mav_userid' => $usr['id'],
-			'mav_extension' => $this->extension,
-			'mav_category' => $this->category,
-			'mav_code' => $this->code,
-			'mav_item' => $this->item,
-			'mav_filepath' => $file['path'],
-			'mav_filename' => $file['name'],
-			'mav_fileext' => $file['extension'],
-			'mav_fileorigname' => $file['origname'],
-			'mav_thumbpath' => $this->thumbspath,
-			'mav_filesize' => $file['size'],
-			'mav_desc' => $file['origname'],
-			'mav_order' => $order,
-			'mav_type' => '',
-			);
-			$db->insert($db_mavatars, $mavarray);
-			$mavarray['mav_id'] = $db->lastInsertId();	
+			$mavarray = $this->mavatar_add($file, '', $order);
 		}
-
 		$mavatar = array();
 		foreach ($mavarray as $key => $val)
 		{
@@ -462,16 +466,16 @@ class mavatar
 
 		$t->assign($this->generate_tags($mavatar));
 		$t->assign(array(
-			'ENABLED' => cot_checkbox(true, 'mavatar_enabled[' . $mavatar['id'] . ']', '', 'title="'.$L['Enabled'].'"'),
-			'FILEORDER' => cot_inputbox('text', 'mavatar_order[' . $mavatar['id'] . ']', $mavatar['order'], 'maxlength="4" size="4"'),
-			'FILEDESC' => cot_inputbox('text', 'mavatar_desc[' . $mavatar['id'] . ']', $mavatar['desc']),
-			'FILENEW' => cot_inputbox('hidden', 'mavatar_new[' . $mavatar['id'] . ']', 0),
+			'ENABLED' => cot_checkbox(true, 'mavatar_enabled['.$mavatar['id'].']', '', 'title="'.$L['Enabled'].'"'),
+			'FILEORDER' => cot_inputbox('text', 'mavatar_order['.$mavatar['id'].']', $mavatar['order'], 'maxlength="4" size="4"'),
+			'FILEDESC' => cot_inputbox('text', 'mavatar_desc['.$mavatar['id'].']', $mavatar['desc']),
+			'FILENEW' => cot_inputbox('hidden', 'mavatar_new['.$mavatar['id'].']', 0),
 		));
 		$t->parse("MAIN.FILES.ROW");
 		if ($this->mavatars)
 		{
 			$mavatar['form'] = htmlspecialchars($t->text("MAIN.FILES.ROW"));
-		}	
+		}
 		else
 		{
 			$t->parse("MAIN.FILES");
@@ -481,15 +485,15 @@ class mavatar
 		return $mavatar;
 	}
 
-	function upload()
+	function upload($input_name = 'mavatar_file')
 	{
 
 		global $db, $db_mavatars;
 		$order = count($this->mavatars);
 		$files_array = array();
-		if (is_array($_FILES['mavatar_file']['name']))
+		if (is_array($_FILES[$input_name]['name']))
 		{
-			foreach ($_FILES['mavatar_file']['name'] as $key => $val)
+			foreach ($_FILES[$input_name]['name'] as $key => $val)
 			{
 				$files_array[$key]['name'] = $_FILES['mavatar_file']['name'][$key];
 				$files_array[$key]['tmp_name'] = $_FILES['mavatar_file']['tmp_name'][$key];
@@ -499,7 +503,7 @@ class mavatar
 		}
 		else
 		{
-			$files_array = $_FILES['mavatar_file'];
+			$files_array = $_FILES[$input_name];
 		}
 
 		foreach ($files_array as $key => $file_object)
@@ -508,34 +512,19 @@ class mavatar
 			if ($file)
 			{
 				$order++;
-				$db->insert($db_mavatars, array(
-				'mav_userid' => $usr['id'],
-				'mav_extension' => $this->extension,
-				'mav_category' => $this->category,
-				'mav_code' => $this->code,
-				'mav_item' => $this->item,
-				'mav_filepath' => $file['path'],
-				'mav_filename' => $file['name'],
-				'mav_fileext' => $file['extension'],
-				'mav_fileorigname' => $file['origname'],
-				'mav_thumbpath' => $this->thumbspath,
-				'mav_filesize' => $file['size'],
-				'mav_desc' => $file['origname'],
-				'mav_order' => $order,
-				'mav_type' => '',
-				));
+				$this->mavatar_add($file, '', $order);
 			}
 		}
 		if ($cfg['plugin']['mavatars']['turncurl'])
 		{
 			$files_array = array();
-			if(is_array($_GET['mavatar_curlfile']))
+			if (is_array($_GET['mavatar_curlfile']))
 			{
 				$files_array = cot_import('mavatar_curlfile', 'G', 'ARR');
 			}
-			elseif(is_string($_GET['mavatar_curlfile']))
+			elseif (is_string($_GET['mavatar_curlfile']))
 			{
-				$files_array[]=$_GET['mavatar_curlfile'];
+				$files_array[] = $_GET['mavatar_curlfile'];
 			}
 			foreach ($files_array as $key => $file_object)
 			{
@@ -544,31 +533,17 @@ class mavatar
 				if ($file)
 				{
 					$order++;
-					$db->insert($db_mavatars, array(
-						'mav_userid' => $usr['id'],
-						'mav_extension' => $this->extension,
-						'mav_category' => $this->category,
-						'mav_code' => $this->code,
-						'mav_item' => $this->item,
-						'mav_filepath' => $file['path'],
-						'mav_filename' => $file['name'],
-						'mav_fileext' => $file['extension'],
-						'mav_fileorigname' => $file['origname'],
-						'mav_thumbpath' => $this->thumbspath,
-						'mav_filesize' => $file['size'],
-						'mav_desc' => $file['origname'],
-						'mav_order' => $order,
-						'mav_type' => '',
-					));	
+					$this->mavatar_add($file, '', $order);
 				}
 			}
 		}
 		//
 	}
+
 	function update()
 	{
 		global $db, $db_mavatars;
-		if($this->code != 'new')
+		if ($this->code != 'new')
 		{
 
 			$mavatars['mav_enabled'] = cot_import('mavatar_enabled', 'P', 'ARR');
@@ -578,21 +553,19 @@ class mavatar
 
 			$mavatars['mav_enabled'] = (count($mavatars['mav_enabled']) > 0) ? $mavatars['mav_enabled'] : array();
 
-			foreach($mavatars['mav_enabled'] as $id => $enabled )
+			foreach ($mavatars['mav_enabled'] as $id => $enabled)
 			{
-				$mavatar= array();
+				$mavatar = array();
 				$enabled = cot_import($enabled, 'D', 'BOL') ? true : false;
 				$mavatar['mav_order'] = cot_import($mavatars['mav_order'][$id], 'D', 'INT');
 				$mavatar['mav_desc'] = cot_import($mavatars['mav_desc'][$id], 'D', 'TXT');
 				$new = cot_import($mavatars['mav_new'][$id], 'D', 'BOL');
-				if($enabled)
+				if ($enabled)
 				{
-					if($new)
-					{
-						$mavatar['mav_extension'] = $this->extension;
-						$mavatar['mav_category'] = $this->category;
-						$mavatar['mav_code'] = $this->code;
-					}
+					$mavatar['mav_extension'] = $this->extension;
+					$mavatar['mav_category'] = $this->category;
+					$mavatar['mav_code'] = $this->code;
+
 					$db->update($db_mavatars, $mavatar, 'mav_id='.(int)$id);
 				}
 				else
@@ -601,7 +574,7 @@ class mavatar
 					$this->delete_mavatar($mavatar);
 				}
 			}
-		$this->get_mavatars();
+			$this->get_mavatars();
 		}
 	}
 
@@ -635,11 +608,11 @@ class mavatar
 		{
 			$fname = cot_unique();
 		}
-		if (file_exists($savedirectory . $fname . $postfix . '.' . mb_strtolower($ext)))
+		if (file_exists($savedirectory.$fname.$postfix.'.'.mb_strtolower($ext)))
 		{
-			$fname = $fname . "_" . cot_date('dmY_His', $sys['now']);
+			$fname = $fname."_".cot_date('dmY_His', $sys['now']);
 		}
-		return $fname . $postfix . '.' . mb_strtolower($ext);
+		return $fname.$postfix.'.'.mb_strtolower($ext);
 	}
 
 	/**
@@ -736,11 +709,11 @@ function cot_mav_thumb($object, $width, $height, $resize = 'crop', $filter = '',
 		return false;
 	}
 
-	$source_file = $object['filepath'] . $object['filename'] . '.' . $object['fileext'];
+	$source_file = $object['filepath'].$object['filename'].'.'.$object['fileext'];
 
-	$thumb_file = $object['thumbpath'] . $object['filename'] . '_' . $width . '_' . $height . '_' . $resize;
-	$thumb_file .= (!empty($filter)) ? '_' . $filter : '';
-	$thumb_file .= '.' . $object['fileext'];
+	$thumb_file = $object['thumbpath'].$object['filename'].'_'.$width.'_'.$height.'_'.$resize;
+	$thumb_file .= (!empty($filter)) ? '_'.$filter : '';
+	$thumb_file .= '.'.$object['fileext'];
 
 	if (!file_exists($source_file))
 	{

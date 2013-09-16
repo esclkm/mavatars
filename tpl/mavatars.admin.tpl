@@ -21,7 +21,7 @@
 			<td><input type="checkbox" class="ca_req" name="ca_req" value="{ADDREQ}" <!-- IF {ADDREQ} -->checked="checked"<!-- ENDIF --> /></td>
 			<td><input type="text" class="text ca_fileext" name="ca_ext" value="{ADDEXT}" size="4" maxlength="255" /></td>
 			<td><input type="text" class="text ca_size" name="ca_size" value="{ADDMAX}" size="4" maxlength="255" /></td>
-			<td><a href="#" class="deloption negative button" style="display:none"><span class="trash icon"></span>{PHP.L.Delete}</a></td>
+			<td><a href="#" class="deloption negative button trash icon" style="display:none">{PHP.L.Delete}</a></td>
 		</tr>
 		<!-- END: ADDITIONAL -->
 		<tr id="addtr">

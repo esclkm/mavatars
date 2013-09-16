@@ -20,12 +20,12 @@ defined('COT_CODE') or die('Wrong URL');
 require_once cot_incfile('page', 'module');
 $adminhelp = $L['news_help'];
 
-if ($p == 'mavatars' && $config_name == 'set' && $cfg['jquery'])
+if ($p == 'mavatars' && $row['config_name'] == 'set' && $cfg['jquery'])
 {
 	$sskin = cot_tplfile('mavatars.admin', 'plug', true);
 	$tt = new XTemplate($sskin);
 
-	$tpaset = str_replace("\r\n", "\n", $config_value);
+	$tpaset = str_replace("\r\n", "\n", $row['config_value']);
 	$tpaset = explode("\n", $tpaset);
 	$jj = 0;
 	foreach ($tpaset as $k => $v)
@@ -53,6 +53,6 @@ if ($p == 'mavatars' && $config_name == 'set' && $cfg['jquery'])
 	$tt->parse('MAIN');
 
 	$t->assign(array(
-		'ADMIN_CONFIG_ROW_CONFIG_MORE' => $tt->text('MAIN') . '<div id="helptext">' . $config_more . '</div>'
+		'ADMIN_CONFIG_ROW_CONFIG_MORE' => $tt->text('MAIN') . '<div id="helptext">' . $hint . '</div>'
 	));
 }
