@@ -1,9 +1,9 @@
 /*
  *  PekeUpload 1.0.6 - jQuery plugin
  *  written by Pedro Molina
- *  http://www.pekebyte.com/
+ *  http://www.mavatarsbyte.com/
  *
- *  Copyright (c) 2013 Pedro Molina (http://pekebyte.com)
+ *  Copyright (c) 2013 Pedro Molina (http://mavatarsbyte.com)
  *  Dual licensed under the MIT (MIT-LICENSE.txt)
  *  and GPL (GPL-LICENSE.txt) licenses.
  *
@@ -13,7 +13,7 @@
  */
 (function($) {
 
-	$.fn.pekeUpload = function(options) {
+	$.fn.mavatarsUpload = function(options) {
 
 		// default configuration properties
 		var defaults = {
@@ -43,7 +43,7 @@
 		var fileinput = this;
 		this.each(function() {
 			obj = $(this);
-			var html = '<button class="button large special">' + options.btnText + '</button><div class="pekecontainer"></div>';
+			var html = '<button class="button large special">' + options.btnText + '</button><div class="mavatarscontainer"></div>';
 			obj.after(html);
 			obj.hide();
 			//Event when clicked the newly created link
@@ -72,9 +72,12 @@
 		//Function that uploads a file
 		function UploadFile() {
 			var error = true;
-			var htmlprogress = '<div class="file"><div class="filename"></div><div class="progress-pekeupload"><div class="bar-pekeupload pekeup-progress-bar" style="width: 0%;"><span></span></div></div></div>';
-
+			var htmlprogress = '<div class="file"><div class="filename"></div><div class="progress-mavatarsupload"><div class="bar-mavatarsupload mavatarsup-progress-bar" style="width: 0%;"><span></span></div></div></div>';
+			var uploadobj;
 			obj.next('button').next('div').prepend(htmlprogress);
+			
+			uploadobj = obj.next('button').next('div').find('.file:first');
+			
 			var formData = new FormData();
 			formData.append(obj.attr('name'), obj[0].files[0]);
 			formData.append('data', options.data);
@@ -85,8 +88,8 @@
 			//	dataType: 'json',
 				success: function(data) {
 					var percent = 100;
-					obj.next('button').next('div').find('.pekeup-progress-bar:first').width(percent + '%');
-					obj.next('button').next('div').find('.pekeup-progress-bar:first').text(percent + "%");
+					uploadobj.find('.mavatarsup-progress-bar:first').width(percent + '%');
+					uploadobj.find('.mavatarsup-progress-bar:first').text(percent + "%");
 					var response = jQuery.parseJSON(data);
 					if (typeof response == 'object') {
 						data = response;
@@ -96,14 +99,15 @@
 					}
 					if (data == 1 || data.success == 1) {
 						options.multi == false && obj.attr('disabled', 'disabled');
+						uploadobj.remove();
 						options.onFileSuccess(file, data);
 					}
 					else {
 						options.onFileError(file, data);
-						obj.next('button').next('div').find('.file:first').remove();
+						uploadobj.remove();
 
 						if (options.showErrorAlerts == true) {
-							obj.next('button').next('div').prepend('<div class="alert-pekeupload"><button type="button" class="close" data-dismiss="alert">&times;</button> ' + data.error + '</div>');
+							obj.next('button').next('div').prepend('<div class="alert-mavatarsupload"><button type="button" class="close" data-dismiss="alert">&times;</button> ' + data.error + '</div>');
 							closenotification();
 						}
 						error = false;
@@ -132,9 +136,9 @@
 				}
 				if (options.showPercent == true) {
 					var percent = Number(((e.loaded * 100) / e.total).toFixed(2));
-					obj.next('button').next('div').find('.file').first().find('.pekeup-progress-bar:first').width(percent + '%');
+					obj.next('button').next('div').find('.file').first().find('.mavatarsup-progress-bar:first').width(percent + '%');
 				}
-				obj.next('button').next('div').find('.file').first().find('.pekeup-progress-bar:first').html('<center>' + percent + "%</center>");
+				obj.next('button').next('div').find('.file').first().find('.mavatarsup-progress-bar:first').html('<center>' + percent + "%</center>");
 			}
 		}
 		//Validate master
@@ -145,7 +149,7 @@
 				if (validationresult == false) {
 					canUpload = false;
 					if (options.showErrorAlerts == true) {
-						obj.next('button').next('div').prepend('<div class="alert-pekeupload"><button type="button" class="close">&times;</button> ' + options.invalidExtError + '</div>');
+						obj.next('button').next('div').prepend('<div class="alert-mavatarsupload"><button type="button" class="close">&times;</button> ' + options.invalidExtError + '</div>');
 						closenotification();
 					}
 					options.onFileError(file, options.invalidExtError);
@@ -159,7 +163,7 @@
 				if (validationresult == false) {
 					canUpload = false;
 					if (options.showErrorAlerts == true) {
-						obj.next('button').next('div').prepend('<div class="alert-pekeupload"><button type="button" class="close" data-dismiss="alert">&times;</button> ' + options.sizeError + '</div>');
+						obj.next('button').next('div').prepend('<div class="alert-mavatarsupload"><button type="button" class="close" data-dismiss="alert">&times;</button> ' + options.sizeError + '</div>');
 						closenotification();
 					}
 					options.onFileError(file, options.sizeError);
@@ -191,7 +195,7 @@
 			}
 		}
 		function closenotification() {
-			obj.next('button').next('div').find('.alert-pekeupload').click(function() {
+			obj.next('button').next('div').find('.alert-mavatarsupload').click(function() {
 				$(this).remove();
 			});
 		}

@@ -376,12 +376,13 @@ class mavatar
 		global $cfg;
 		$path_parts = pathinfo($file_object['name']);
 		$file_name = $path_parts['basename'];
-		if (!in_array($path_parts['extension'], $this->suppressed_ext) && in_array($path_parts['extension'], $this->allowed_ext))
+		$extension = mb_strtolower($path_parts['extension']);
+		if (!in_array($extension, $this->suppressed_ext) && in_array($extension, $this->allowed_ext))
 		{
 			$file_name = cot_safename($path_parts['basename'], $this->path);
-			$extension = mb_strtolower($path_parts['extension']);
+			
 			$file_name = str_replace('.'.$extension, '', $file_name);
-			if ($this->file_check($file_object['tmp_name'], $path_parts['extension']) || !$cfg['plugin']['mavatars']['filecheck'])
+			if ($this->file_check($file_object['tmp_name'], $extension) || !$cfg['plugin']['mavatars']['filecheck'])
 			{
 				if (file_exists($this->path.$file_name.'.'.$extension))
 				{
@@ -395,7 +396,7 @@ class mavatar
 						'size' => $file_object['size'],
 						'path' => $this->path,
 						'name' => $file_name,
-						'origname' => str_replace('.'.$path_parts['extension'], '', $file_object['name'])
+						'origname' => str_replace('.'.$extension, '', $file_object['name'])
 					);
 				}
 			}
