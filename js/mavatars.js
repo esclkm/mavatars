@@ -30,56 +30,73 @@
 			maxSize: 0,
 			sizeError: "Size of the file is greather than allowed",
 			onFileError: function(file, error) {
-			},
-			onFileSuccess: function(file, data) {
 			}
 		};
 
 		var options = $.extend(defaults, options);
 
+		// строки замены. просто в стандартной библиотеке очень коряво был html - хочется это несколько упорядочить
+		var inputform = '<button class="button large special">%text%</button><div class="mavatarscontainer"></div>';
+		var progressbar = '<div class="file"><div class="filename"></div><div class="mavatarsupload-progress"><div class="mavatarsupload-bar mavatarsupload-progressbar" style="width: 0%;"><span></span></div></div></div>'
+		var alertmessage = '<div class="mavatarsupload-alert"><button type="button" class="close">&times;</button>%text%</div>'
+		
 		//Main function
-		var obj;
+		var obj; //объект маватара
+		var fileinput; //поле ввода
+		var fileuploadcontainer; // поле прогреессбаров
+		var uploadedfiles;
+		
 		var file = new Object();
-		var fileinput = this;
+
 		this.each(function() {
 			obj = $(this);
-			var html = '<button class="button large special">' + options.btnText + '</button><div class="mavatarscontainer"></div>';
-			obj.after(html);
-			obj.hide();
+			fileinput = $(this).find('input[type=file]:first');
+			
+			fileinput.after(inputform.replace(/\%text\%/g, options.btnText));
+			fileinput.hide();
+			
+			fileuploadcontainer = fileinput.next('button').next('.mavatarscontainer');	
+			uploadedfiles = obj.find('.uploadedfiles');
+			
 			//Event when clicked the newly created link
-			obj.next('button').click(function() {
-				obj.click();
+			fileinput.next('button').click(function() {
+				fileinput.click();
 				return false;
 			});
 			//Event when user select a file
-			obj.change(function() {
-				file.name = obj.val().split('\\').pop();
-				file.size = (obj[0].files[0].size / 1024) / 1024;
+			fileinput.change(function() {
+				file.name = fileinput.val().split('\\').pop();
+				file.size = (fileinput[0].files[0].size / 1024) / 1024;
 				if (validateresult() == true) {
 					if (options.onSubmit == false) {
 						UploadFile();
 					}
 					else {
-						obj.next('button').next('div').prepend('<br /><span class="filename">' + file.name + '</span>');
-						obj.parent('form').bind('submit', function() {
-							obj.next('button').next('div').html('');
+						fileuploadcontainer.prepend('<br /><span class="filename">' + file.name + '</span>');
+						fileinput.parent('form').bind('submit', function() {
+							fileuploadcontainer.html('');
 							UploadFile();
 						});
 					}
 				}
 			});
+		
+			uploadedfiles.find('.uploadedfile').find("input[type=checkbox]").click(function() {
+				$(this).removeAttr("checked");
+				$(this).closest('.uploadedfile').hide();
+				return false;
+			});		
 		});
 		//Function that uploads a file
 		function UploadFile() {
 			var error = true;
-			var htmlprogress = '<div class="file"><div class="filename"></div><div class="progress-mavatarsupload"><div class="bar-mavatarsupload mavatarsup-progress-bar" style="width: 0%;"><span></span></div></div></div>';
 			var uploadobj;
-			obj.next('button').next('div').prepend(htmlprogress);
+			fileuploadcontainer.prepend(progressbar);
 			
-			uploadobj = obj.next('button').next('div').find('.file:first');
+			uploadobj = fileuploadcontainer.find('.file:first');
 			
 			var formData = new FormData();
-			formData.append(obj.attr('name'), obj[0].files[0]);
+			formData.append(fileinput.attr('name'), fileinput[0].files[0]);
 			formData.append('data', options.data);
 			$.ajax({
 				url: options.url,
@@ -88,8 +105,8 @@
 			//	dataType: 'json',
 				success: function(data) {
 					var percent = 100;
-					uploadobj.find('.mavatarsup-progress-bar:first').width(percent + '%');
-					uploadobj.find('.mavatarsup-progress-bar:first').text(percent + "%");
+					uploadobj.find('.mavatarsupload-progressbar:first').width(percent + '%');
+					uploadobj.find('.mavatarsupload-progressbar:first span').text(percent + "%");
 					var response = jQuery.parseJSON(data);
 					if (typeof response == 'object') {
 						data = response;
@@ -98,16 +115,17 @@
 						else data = {success: "0", error: data};
 					}
 					if (data == 1 || data.success == 1) {
-						options.multi == false && obj.attr('disabled', 'disabled');
-						uploadobj.remove();
-						options.onFileSuccess(file, data);
-					}
+						options.multi == false && fileinput.attr('disabled', 'disabled');
+					//	uploadobj.remove();
+						var decoded = $('<textarea/>').html(data.form).val();
+							uploadedfiles.append(decoded);
+						}
 					else {
 						options.onFileError(file, data);
 						uploadobj.remove();
 
 						if (options.showErrorAlerts == true) {
-							obj.next('button').next('div').prepend('<div class="alert-mavatarsupload"><button type="button" class="close" data-dismiss="alert">&times;</button> ' + data.error + '</div>');
+							fileuploadcontainer.prepend(alertmessage.replace(/\%text\%/g, data.error));
 							closenotification();
 						}
 						error = false;
@@ -132,13 +150,13 @@
 				var total = e.total;
 				var loaded = e.loaded;
 				if (options.showFilename == true) {
-					obj.next('button').next('div').find('.file').first().find('.filename:first').text(file.name);
+					fileuploadcontainer.find('.file').first().find('.filename:first').text(file.name);
 				}
 				if (options.showPercent == true) {
 					var percent = Number(((e.loaded * 100) / e.total).toFixed(2));
-					obj.next('button').next('div').find('.file').first().find('.mavatarsup-progress-bar:first').width(percent + '%');
+					fileuploadcontainer.find('.file').first().find('.mavatarsupload-progressbar:first').width(percent + '%');
 				}
-				obj.next('button').next('div').find('.file').first().find('.mavatarsup-progress-bar:first').html('<center>' + percent + "%</center>");
+				fileuploadcontainer.find('.file').first().find('.mavatarsupload-progressbar:first span').text(percent + "%");
 			}
 		}
 		//Validate master
@@ -149,7 +167,7 @@
 				if (validationresult == false) {
 					canUpload = false;
 					if (options.showErrorAlerts == true) {
-						obj.next('button').next('div').prepend('<div class="alert-mavatarsupload"><button type="button" class="close">&times;</button> ' + options.invalidExtError + '</div>');
+						fileuploadcontainer.prepend(alertmessage.replace(/\%text\%/g, options.invalidExtError));
 						closenotification();
 					}
 					options.onFileError(file, options.invalidExtError);
@@ -163,7 +181,7 @@
 				if (validationresult == false) {
 					canUpload = false;
 					if (options.showErrorAlerts == true) {
-						obj.next('button').next('div').prepend('<div class="alert-mavatarsupload"><button type="button" class="close" data-dismiss="alert">&times;</button> ' + options.sizeError + '</div>');
+						fileuploadcontainer.prepend(alertmessage.replace(/\%text\%/g, options.sizeError));
 						closenotification();
 					}
 					options.onFileError(file, options.sizeError);
@@ -172,11 +190,11 @@
 					canUpload = true;
 				}
 			}
-			return canUpload
-		}
+			return canUpload;
+		};
 		//Validate extension of file
 		function validateExtension() {
-			var ext = obj.val().split('.').pop().toLowerCase();
+			var ext = fileinput.val().split('.').pop().toLowerCase();
 			var allowed = options.allowedExtensions.split("|");
 			if ($.inArray(ext, allowed) == -1) {
 				return false;
@@ -184,7 +202,7 @@
 			else {
 				return true;
 			}
-		}
+		};
 		//Validate Size of the file
 		function validateSize() {
 			if (file.size > options.maxSize) {
@@ -193,12 +211,12 @@
 			else {
 				return true;
 			}
-		}
+		};
 		function closenotification() {
-			obj.next('button').next('div').find('.alert-mavatarsupload').click(function() {
+			fileuploadcontainer.find('mavatarsupload-alert').click(function() {
 				$(this).remove();
 			});
-		}
+		};
 	};
 
 })(jQuery);
