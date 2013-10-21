@@ -81,11 +81,11 @@
 				}
 			});
 		
-			uploadedfiles.find('.uploadedfile').find("input[type=checkbox]").click(function() {
+		/*	uploadedfiles.find('.uploadedfile').find("input[type=checkbox]").click(function() {
 				$(this).removeAttr("checked");
 				$(this).closest('.uploadedfile').hide();
 				return false;
-			});		
+			});*/		
 		});
 		//Function that uploads a file
 		function UploadFile() {

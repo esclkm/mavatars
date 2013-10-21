@@ -496,15 +496,15 @@ class mavatar
 		{
 			foreach ($_FILES[$input_name]['name'] as $key => $val)
 			{
-				$files_array[$key]['name'] = $_FILES['mavatar_file']['name'][$key];
-				$files_array[$key]['tmp_name'] = $_FILES['mavatar_file']['tmp_name'][$key];
-				$files_array[$key]['size'] = $_FILES['mavatar_file']['size'][$key];
-				$files_array[$key]['error'] = $_FILES['mavatar_file']['error'][$key];
+				$files_array[$key]['name'] = $_FILES[$input_name]['name'][$key];
+				$files_array[$key]['tmp_name'] = $_FILES[$input_name]['tmp_name'][$key];
+				$files_array[$key]['size'] = $_FILES[$input_name]['size'][$key];
+				$files_array[$key]['error'] = $_FILES[$input_name]['error'][$key];
 			}
 		}
 		else
 		{
-			$files_array = $_FILES[$input_name];
+			$files_array[0] = $_FILES[$input_name];
 		}
 
 		foreach ($files_array as $key => $file_object)
