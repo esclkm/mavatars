@@ -79,6 +79,7 @@
 						});
 					}
 				}
+				fileinput.replaceWith(fileinput.val('').clone(true));
 			});
 		
 		/*	uploadedfiles.find('.uploadedfile').find("input[type=checkbox]").click(function() {
