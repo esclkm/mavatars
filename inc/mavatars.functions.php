@@ -390,6 +390,81 @@ class mavatar
 				}
 				if (move_uploaded_file($file_object['tmp_name'], $this->path.$file_name.'.'.$extension))		
 				{
+					/******** Ресайз Изображения *********/
+					$file = $this->path.$file_name.'.'.$extension;
+					$width = (int)$cfg['plugin']['mavatars']['width'];
+					$height = (int)$cfg['plugin']['mavatars']['height'];
+					list($imgWidth, $imgHeight) = getimagesize($file);
+							
+					switch($extension)
+					{
+						case 'jpg':
+							$image = @imagecreatefromjpeg($file);
+							break;
+						case 'png':
+							$image = @imagecreatefrompng($file);
+							break;
+						case 'gif':
+							$image = @imagecreatefromgif($file);
+							break;
+						default:
+							exit("File is not an image");
+					}
+				
+					if(is_numeric($width) && is_numeric($height) && $width > 0 && $height > 0)
+					{
+						if($imgWidth <= $width && $imgHeight <= height) 
+							$newSize =array($imgWidth, $imgHeight);
+						if($imgWidth / $width > $imgHeight / $height)
+						{
+							$newSize[0] = $width;
+							$newSize[1] = round($imgHeight * $width / $imgWidth);
+						}
+						else
+						{
+							$newSize[1] = $height;
+							$newSize[0] = round($imgWidth * $height / $imgHeight);
+						}					
+					}
+					else if(is_numeric($width) && $width > 0)
+					{
+						if($width >= $imgWidth) 
+							$newSize = array($imgWidth, $imgHeight);
+						else{
+							$newSize[0] = $width;
+							$newSize[1] = round($imgHeight * $width / $imgWidth);
+						}
+
+					}
+					else if(is_numeric($height) && $height > 0)
+					{
+							if($height >= $imgHeight) 
+								$newSize = array($imgWidth, $imgHeight);
+							else{	
+								$newSize[1] = $height;
+								$newSize[0] = round($imgWidth * $height / $imgHeight);
+							}	
+					}
+					else 
+						$newSize = array($imgWidth, $imgHeight);
+						
+					$newImage = imagecreatetruecolor($newSize[0], $newSize[1]);
+					//завернуть в отдельную функцию, сжимающую изображение поэтапно
+					imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newSize[0], $newSize[1], $imgWidth, $imgHeight);
+					switch($extension)
+					{
+						case 'jpg':
+							imagejpeg($newImage, $file, 85);
+							break;
+						case 'png':
+							imagepng($newImage, $file);
+							break;
+						case 'gif':
+							imagegif($newImage, $file); 
+							break;
+					}
+
+				/*----------            ----------*/
 					return array(
 						'fullname' => $this->path.$file_name.'.'.$extension,
 						'extension' => $extension,
