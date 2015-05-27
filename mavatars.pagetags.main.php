@@ -17,7 +17,11 @@ defined('COT_CODE') or die('Wrong URL');
 require_once cot_incfile('mavatars', 'plug');
 global $mavatar, $mav_rowset_list;
 $mavatar = new mavatar('page', $page_data['page_cat'], $page_data['page_id'], $mav_rowset_list);
-$mavatars_tags = $mavatar->tags();
+$mavatars_tags = $mavatar->extfilter_images();
+$mavatars_tags_files = $mavatar->extfilter_notimages();
 
 $temp_array['MAVATAR'] = $mavatars_tags;
 $temp_array['MAVATARCOUNT'] = count($mavatars_tags);
+
+$temp_array['MAVATARFILES'] = $mavatars_tags_files;
+$temp_array['MAVATARFILESCOUNT'] = count($mavatars_tags_files);

@@ -15,7 +15,7 @@ $code = cot_import('code', 'G', 'TXT');
 $id = cot_import('id', 'G', 'TXT');
 $mavatar = new mavatar($ext, $cat, $code);
 
-$array = $mavatar->delete_mavatar_byid($id);
+$array = $mavatar->delete_mavatar($id);
 
 echo(json_encode($array));
 

@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `cot_mavatars` (
 	`mav_desc` varchar(255) NOT NULL,
 	`mav_order` int(11) NOT NULL,
 	`mav_date` int(11) NOT NULL,
+	`mav_downloads` int(11) NOT NULL default '0',
 	`mav_type` varchar(255) NOT NULL,
     PRIMARY KEY (`mav_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

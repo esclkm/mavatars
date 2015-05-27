@@ -31,3 +31,5 @@ $L['mavatar_file'] = 'Изображение #';
 $L['mavatar_form_addedfiles'] = 'Прикрепленные файлы';
 $L['mavatar_form_addfiles'] = 'Прикрепить файлы';
 $L['mavatar_form_addcurl'] = 'Загрузить из интернета';
+$L['mavatar_error_upload'] = 'Невозможно загрузить файл';
+$L['mavatar_error_mimetype'] = 'Недопустимое расширение файла';

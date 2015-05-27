@@ -29,12 +29,11 @@ if(empty($resize))
 {
 	$resize = 'crop';
 }
-$mavatar = new mavatar($ext, $cat, $code, $id);
-$mavatars_tags = $mavatar->tags();
 
+$mavatar = new mavatar_object($id);
 
 $image = $mavatar->thumb($mavatars_tags[1], $width, $height, $resize, $filter, $quality);
-cot_watch($image, $mavatars_tags);
+
 ob_clean();
 header('Content-Type: image/jpeg');
 
