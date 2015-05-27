@@ -354,7 +354,6 @@ class mavatar
 		{
 			$safe_name = $this->safename($this->filepath, $file_name, $file_extension);
 			$file_fullname = $this->file_path($this->filepath, $safe_name, $file_extension);
-			cot_watch($file_name, $file_extension, $this->file_check($file_object['tmp_name'], $file_extension));
 			if ($this->file_check($file_object['tmp_name'], $file_extension) || !$cfg['plugin']['mavatars']['filecheck'])
 			{
 				if (move_uploaded_file($file_object['tmp_name'], $file_fullname))
@@ -641,7 +640,6 @@ class mavatar
 		}
 		else
 		{
-			cot_watch('deep', $mime_type[$ext], $mime_type);
 			if (!empty($mime_type[$ext]))
 			{
 				foreach ($mime_type[$ext] as $mime)
@@ -707,7 +705,7 @@ class mavatar
 		$key = 0;
 		foreach ($this->mavatars as $mavatar)
 		{
-			if ($mavatar->$param == $value)
+			if ($mavatar->$param == $value && $mavatar->id)
 			{
 				$key++;
 				$array[$key] = $mavatar;
@@ -724,8 +722,8 @@ class mavatar
 		$key = 0;
 		foreach ($this->mavatars as $mavatar)
 		{
-			if ((in_array($mavatar->fileext, $extensions) && $inarray) ||
-				(!in_array($mavatar->fileext, $extensions) && !$inarray))
+			if (((in_array($mavatar->fileext, $extensions) && $inarray) ||
+				(!in_array($mavatar->fileext, $extensions) && !$inarray)) && $mavatar->id)
 			{
 				$key++;
 				$array[$key] = $mavatar;
