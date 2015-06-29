@@ -32,7 +32,7 @@ if(empty($resize))
 
 $mavatar = new mavatar_object($id);
 
-$image = $mavatar->thumb($mavatars_tags[1], $width, $height, $resize, $filter, $quality);
+$image = $mavatar->thumb($width, $height, $resize, $filter, $quality);
 
 ob_clean();
 header('Content-Type: image/jpeg');

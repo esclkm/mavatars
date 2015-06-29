@@ -148,9 +148,10 @@ class mavatar_object
 		return $file_list;
 	}
 
-	public function file_path()
+	public function file_path($path = '')
 	{
-		return $this->dbdata['mav_filepath'].$this->dbdata['mav_filename'].'.'.$this->dbdata['mav_fileext'];
+		$path = empty($path) ? $this->dbdata['mav_filepath'] : $path;
+		return $path.$this->dbdata['mav_filename'].'.'.$this->dbdata['mav_fileext'];
 	}
 
 	public function thumb_path($size_dir)
@@ -324,7 +325,7 @@ class mavatar_object
 	 * @param string $filter filter options: need exists function with this name
 	 * @param int $quality JPEG quality in %
 	 */
-	public function check_thumb($object, $width, $height, $resize = 'crop', $filter = '', $quality = 85)
+	public function check_thumb($width, $height, $resize = 'crop', $filter = '', $quality = 85)
 	{
 
 
