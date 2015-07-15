@@ -515,7 +515,7 @@ class mavatar
 			{
 				if ($exfld['field_type'] != 'file' || $exfld['field_type'] != 'filesize')
 				{
-					$mavatars[$exfld['field_name']] = cot_import('mavatar_'.$exfld['field_name'], 'P', 'ARR');
+					$mavatars['mav_'.$exfld['field_name']] = cot_import('mavatar_'.$exfld['field_name'], 'P', 'ARR');
 				}
 			}
 
@@ -529,7 +529,7 @@ class mavatar
 
 				foreach ($cot_extrafields[$db_mavatars] as $exfld)
 				{
-					$mavarray['mav_'.$exfld['field_name']] = cot_import_extrafields($mavatars['mav_'.$exfld['field_name']][$id], $exfld, 'D', $mavatar_info['mav_'.$exfld['field_name']]);
+					$mavatar['mav_'.$exfld['field_name']] = cot_import_extrafields($mavatars['mav_'.$exfld['field_name']][$id], $exfld, 'D', $mavatar_info->$exfld['field_name']);
 				}
 
 				if ($enabled)
@@ -542,6 +542,7 @@ class mavatar
 					}
 					$mavatar['mav_filename'] = $this->rename_file($mavatar_info, $mavatar['mav_desc']);
 					$mavatar['mav_date'] = $sys['now'];
+
 					$db->update($db_mavatars, $mavatar, 'mav_id='.(int)$id);
 				}
 				else

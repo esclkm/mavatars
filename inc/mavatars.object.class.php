@@ -112,6 +112,7 @@ class mavatar_object
 		);
 		foreach ($cot_extrafields[$db_mavatars] as $exfld)
 		{
+			$uname = mb_strtoupper($exfld['field_name']);
 			$tags[$uname] = cot_build_extrafields($prefix.$exfld['field_name'].'['.$this->id.']', $exfld, $this->dbdata['mav_'.$exfld['field_name']]);
 			$tags[$uname.'_TITLE'] = isset($L['mavatar_'.$exfld['field_name'].'_title']) ? $L['mavatar_'.$exfld['field_name'].'_title'] : $exfld['field_description'];
 		}
