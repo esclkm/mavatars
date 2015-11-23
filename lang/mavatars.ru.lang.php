@@ -32,3 +32,4 @@ $L['mavatar_form_addcurl'] = 'Загрузить из интернета';
 $L['mavatar_error_upload'] = 'Невозможно загрузить файл';
 $L['mavatar_error_mimetype'] = 'Недопустимое расширение файла';
 $L['mavatar_dnd_help'] = 'Для изменения порядка отображения файла - перетяните его изображение';
+$L['mavatar_alt'] = 'Alt';

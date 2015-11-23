@@ -19,9 +19,12 @@
 			</div>
 			<div class="row">	
 				<div class="col-sm-2">{ENABLED}</div>
+				
 				<div class="col-sm-10 des">
-					<div class="inp">{FILEDESCTEXT|cot_rc_modify('$this', 'class="form-control"')}</div> 
+					{FILEDESCTEXT|cot_rc_modify('$this', 'class="form-control" placeholder="{PHP.L.mavatar_alt}" title="{PHP.L.mavatar_alt}"  ')}
+					<div class="inp">{FILEDESCTEXT|cot_rc_modify('$this', 'class="form-control" title="{PHP.L.Description}" placeholder="{PHP.L.Description}"') }</div> 
 				</div>
+				
 				
 			</div>
 			<div class="order hidden">

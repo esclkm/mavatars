@@ -528,7 +528,8 @@ class mavatar
 		$name = preg_replace('#[^a-zA-Z0-9\-_\.\ \+]#', '', $name);
 		$name = str_replace('..', '.', $name);
 		$name = mb_substr($name, 0, 200);
-
+		$name = mb_strtolower($name);
+		
 		if (empty($name))
 		{
 			$name = cot_unique();
