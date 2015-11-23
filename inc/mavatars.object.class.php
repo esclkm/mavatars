@@ -32,7 +32,6 @@ class mavatar_object
 	public $id = 0;
 	private $is_image = false;
 	private $images_ext = array('jpg', 'jpeg', 'png', 'gif');
-	
 
 	public function __construct($dbdata)
 	{
@@ -65,7 +64,6 @@ class mavatar_object
 	// В этом методе супер соль! это и теги и миниатюры
 	public function __get($name)
 	{
-
 		if($this->id == 0)
 		{
 			return false;
@@ -109,6 +107,7 @@ class mavatar_object
 			'FILEORDER' => cot_inputbox('text', $prefix.'order['.$this->id.']', $this->dbdata['mav_order'], 'maxlength="4" size="4"'),
 			'FILEDESC' => cot_inputbox('text', $prefix.'desc['.$this->id.']', $this->dbdata['mav_desc']),
 			'FILEDESCTEXT' => cot_textarea($prefix.'desc['.$this->id.']', $this->dbdata['mav_desc'], 2, 30),
+			'FILEALT' => cot_inputbox('text', $prefix.'alt['.$this->id.']', $this->dbdata['mav_alt']),
 		);
 		foreach ($cot_extrafields[$db_mavatars] as $exfld)
 		{
@@ -293,6 +292,8 @@ class mavatar_object
 
 		if (function_exists($filter))
 		{
+		//	$r = new ReflectionFunction($filter);
+		//	cot_watch($r->getFileName() ,	$r->getStartLine());
 			$filter($newimage);
 		}
 
@@ -346,6 +347,7 @@ class mavatar_object
 
 		if (file_exists($thumb_file))
 		{
+			//empty($filter) || cot_print($thumb_file);
 			return $thumb_file;
 		}
 		else

@@ -1,30 +1,31 @@
 <!-- BEGIN: MAIN -->
 <div class="mavatar_uploadform">
-	<div class="uploadedfiles rows">
+	
+	
+
+	<div class="uploadedfiles rows" id="">
 	<!-- BEGIN: FILES -->	
 		<!-- BEGIN: ROW -->
 		<div class="uploadedfile col-md-3 marginbottom10">	
 
-			<div class="img text-center">
+			<div class="img text-center drag">
 				<!-- IF {MAVATAR.FILEEXT} == 'jpg' OR {MAVATAR.FILEEXT} == 'jpeg' OR {MAVATAR.FILEEXT} == 'png' OR {MAVATAR.FILEEXT} == 'gif' -->
-				<a href="{MAVATAR.FILE}" target="_blank"  class="fancybox" rel="gallery1"><img src="{MAVATAR|cot_mav_thumb($this, 255, 191, auto)}" alt="{MAVATAR.FILENAME}.{MAVATAR.FILEEXT}" title="{MAVATAR.FILENAME}.{MAVATAR.FILEEXT}" class="img-thumbnail" /></a>
+				<a href="{MAVATAR.FILE}" target="_blank"  class="fancybox drag" rel="gallery1"><img src="{MAVATAR|cot_mav_thumb($this, 255, 191, auto)}" alt="{MAVATAR.FILENAME}.{MAVATAR.FILEEXT}" title="{MAVATAR.FILENAME}.{MAVATAR.FILEEXT}" class="img-thumbnail" /></a>
 				<!-- ELSE -->
-				<a href="{MAVATAR.FILE}" target="_blank" class="jumbotron text-center" style='width:255px;height:191px;display:inline-block;'>
+				<a href="{MAVATAR.FILE}" target="_blank" class="jumbotron text-center drag" style='width:255px;height:191px;display:inline-block;'>
 					<h2><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></h2>[{MAVATAR.FILEEXT}]
 				</a>
 				<!-- ENDIF -->
 			</div>
-			<div class="des">
-				<div class="inp">{FILEDESCTEXT|cot_rc_modify('$this', 'class="form-control"')}</div> 
-			</div>			
-			<div class="order input-group">
-				<span class="input-group-addon">
-		        	Порядок
-		    	</span>
+			<div class="row">	
+				<div class="col-sm-2">{ENABLED}</div>
+				<div class="col-sm-10 des">
+					<div class="inp">{FILEDESCTEXT|cot_rc_modify('$this', 'class="form-control"')}</div> 
+				</div>
+				
+			</div>
+			<div class="order hidden">
 		    	{FILEORDER|cot_rc_modify('$this', 'class="form-control"')}
-				<span class="input-group-addon">
-		        	 Доступно {ENABLED}
-		    	</span>		    	
 			</div>			
 
 		</div>
@@ -32,12 +33,10 @@
 	<!-- END: FILES -->
 	</div>
 	<div class="clearfix"></div>
-
+	{PHP.L.mavatar_dnd_help}
 	<!-- BEGIN: UPLOAD -->
 	{PHP.L.mavatar_form_addfiles}
-	<!-- FOR {INDEX} IN {PHP.cfg.plugin.mavatars.items|range(1,$this)} -->
-	<div>{FILEUPLOAD_INPUT}</div>
-	<!-- ENDFOR -->
+	<input type="file"  tabindex="-1" hidefocus="true" id="mavatar_file" name="mavatar_file[]" />
 	<!-- END: UPLOAD -->
 	
 	<!-- BEGIN: AJAXUPLOAD -->
@@ -49,7 +48,24 @@
 			, staticPath: '{PHP.cfg.plugins_dir}/mavatars/lib/FileAPI/' // path to *.swf
 		};
 	</script>	
-	
+	<script src="{PHP.cfg.plugins_dir}/mavatars/lib/sortable/Sortable.min.js"></script>
+	<script src="{PHP.cfg.plugins_dir}/mavatars/lib/sortable/jquery.binding.js"></script>
+
+	<script>
+		jQuery(function ($){
+			$('head').append('<style type="text/css">.drag{cursor:move;}</style>');
+			$(".uploadedfiles").find('.uploadedfile [name^="mavatar_order"]' )
+			$(".uploadedfiles").sortable({
+				handle: ".drag",
+				onSort: function (evt) {
+					//$(evt.item).find('[name^="mavatar_order"]').val((evt.newIndex +1));
+					$(".uploadedfiles").find('.uploadedfile [name^="mavatar_order"]' ).each(function(index) {
+						$(this).val((index+1))
+					});
+				}
+			});
+		});
+	</script>		
 	<script src="{PHP.cfg.plugins_dir}/mavatars/lib/FileAPI/FileAPI.min.js"></script>
 	<script src="{PHP.cfg.plugins_dir}/mavatars/lib/FileAPI/FileAPI.exif.js"></script>
 	<script src="{PHP.cfg.plugins_dir}/mavatars/lib/jquery.fileapi.min.js"></script>
@@ -68,7 +84,7 @@
 	<script>
 		jQuery(function ($){
 			$('#uploader').fileapi({
-				url: '{FILEUPLOAD_URL}',
+				url: '{FILEUPLOAD_URL_NOX}&x='+$('[name=x]').val(),
 				autoUpload: true,
 			//	accept: 'image/*',
 				multiple: true,
@@ -107,13 +123,7 @@
 	</script>
 	
 	<!-- END: AJAXUPLOAD -->
-	
-	<!-- BEGIN: CURLUPLOAD -->
-	{PHP.L.mavatar_form_addcurl}
-	<!-- FOR {INDEX} IN {PHP.cfg.plugin.mavatars.items|range(1,$this)} -->
-	<div>{CURLUPLOAD_INPUT}</div>
-	<!-- ENDFOR -->	
-	<!-- END: CURLUPLOAD -->
+
 </div>
 
 <!-- END: MAIN -->

@@ -34,6 +34,7 @@ defined('COT_CODE') or die('Wrong URL');
 		$mav_code = implode("','", $mav_items);
 		$mav_rowset_list = $db->query("SELECT * FROM $db_mavatars WHERE mav_extension ='page' AND
 				 mav_code IN ('".$mav_code."') ORDER BY mav_code ASC, mav_order ASC, mav_item ASC")->fetchAll();
+
 	
 	}
 

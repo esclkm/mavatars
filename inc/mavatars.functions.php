@@ -32,6 +32,5 @@ function cot_mav_thumb($mavatar, $width, $height, $resize='crop', $filter='')
 	{
 		return false;
 	}
-	
 	return $mavatar->check_thumb($width, $height, $resize, $filter);	
 }
