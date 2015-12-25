@@ -36,7 +36,7 @@ https://github.com/Cotonti/Cotonti/blob/master/system/cotemplate.php
         <!-- FOR {KEY}, {VALUE} IN {PAGE_MAVATAR} -->
         <div class="col-md-3 grid-sizer">
             <a href="{VALUE.check_thumb_1140_755_width}"  class="fancybox" rel="gallery1" >
-                <img src="{VALUE|cot_mav_thumb($this, 1140, 755, width)}" class="img-responsive" alt="{VALUE.DESC}" title="{VALUE.DESC}"/>
+                <img src="{VALUE|cot_mav_thumb($this, 1140, 755, width)}" class="img-responsive" alt="{VALUE.DESC}" title="{VALUE.TEXT}"/>
             </a>
             {VALUE.DESC}
         </div>

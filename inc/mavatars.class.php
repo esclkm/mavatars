@@ -248,7 +248,7 @@ class mavatar
 
 	public function delete_files($mavatar, $onlythumbs = false)
 	{
-		foreach ($mavatar->files(false, true) as $key => $file)
+		foreach ($mavatar->files(!$onlythumbs, true) as $key => $file)
 		{
 			if (file_exists($file) && is_writable($file))
 			{
@@ -267,15 +267,24 @@ class mavatar
 		global $cfg, $L;
 		$mskin = cot_tplfile(array('mavatars', 'form', $this->extension, $this->category, $this->code), 'plug');
 		$t = new XTemplate($mskin);
-
+		
+		$mavatars_count = 0;
 		foreach ($this->mavatars as $key => $mavatar)
 		{
-			$t->assign('MAVATAR', $mavatar);
-			$t->assign('MAVATAR_NUM', $key);
-			$t->assign($mavatar->edittags());
-			$t->parse("MAIN.FILES.ROW");
+			if(file_exists($mavatar->file_path()))
+			{
+				$t->assign('MAVATAR', $mavatar);
+				$t->assign('MAVATAR_NUM', $key);
+				$t->assign($mavatar->edittags());
+				$t->parse("MAIN.FILES.ROW");
+				$mavatars_count++;
+			}
+			else
+			{
+				$this->delete_mavatar($mavatar);
+			}
 		}
-		if (count($this->mavatars) > 0)
+		if ($mavatars_count > 0)
 		{
 			$t->parse("MAIN.FILES");
 		}
@@ -436,6 +445,7 @@ class mavatar
 			$mavatars['mav_enabled'] = cot_import('mavatar_enabled', 'P', 'ARR');
 			$mavatars['mav_order'] = cot_import('mavatar_order', 'P', 'ARR');
 			$mavatars['mav_desc'] = cot_import('mavatar_desc', 'P', 'ARR');
+			$mavatars['mav_text'] = cot_import('mavatar_text', 'P', 'ARR');
 
 			$mavatars['mav_enabled'] = (count($mavatars['mav_enabled']) > 0) ? $mavatars['mav_enabled'] : array();
 
@@ -454,6 +464,7 @@ class mavatar
 				$enabled = cot_import($enabled, 'D', 'BOL') ? true : false;
 				$mavatar['mav_order'] = cot_import($mavatars['mav_order'][$id], 'D', 'INT');
 				$mavatar['mav_desc'] = cot_import($mavatars['mav_desc'][$id], 'D', 'TXT');
+				$mavatar['mav_text'] = cot_import($mavatars['mav_text'][$id], 'D', 'TXT');
 
 				foreach ($cot_extrafields[$db_mavatars] as $exfld)
 				{
@@ -469,6 +480,7 @@ class mavatar
 						$mavatar['mav_code'] = $this->code;
 					}
 					$mavatar['mav_filename'] = $this->rename_file($mavatar_info, $mavatar['mav_desc']);
+					//cot_watch($mavatar, $mavatar_info);
 					$mavatar['mav_date'] = $sys['now'];
 					$db->update($db_mavatars, $mavatar, 'mav_id='.(int)$id);
 				}

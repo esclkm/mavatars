@@ -21,8 +21,9 @@
 				<div class="col-sm-2">{ENABLED}</div>
 				
 				<div class="col-sm-10 des">
-					{FILEDESCTEXT|cot_rc_modify('$this', 'class="form-control" placeholder="{PHP.L.mavatar_alt}" title="{PHP.L.mavatar_alt}"  ')}
-					<div class="inp">{FILEDESCTEXT|cot_rc_modify('$this', 'class="form-control" title="{PHP.L.Description}" placeholder="{PHP.L.Description}"') }</div> 
+					{FILEALT|cot_rc_modify('$this', 'class="form-control" placeholder="Alt" title="Alt"  ')}
+					<div class="inp">{FILEDESCTEXT|cot_rc_modify('$this', 'class="form-control" title="ALT" placeholder="ALT"') }</div> 
+					<div class="inp">{FILETEXTTEXT|cot_rc_modify('$this', 'class="form-control" title="TITLE" placeholder="TITLE"') }</div> 
 				</div>
 				
 				
@@ -94,8 +95,8 @@
 				maxSize: FileAPI.MB*10, // max file size
 				imageTransform: {
 					// resize by max side
-					maxWidth: 1600,
-					maxHeight: 1600
+					maxWidth: 2000,
+					maxHeight: 2600
 				},
 				onFileComplete: function (evt, uiEvt){
 					var file = uiEvt.file;

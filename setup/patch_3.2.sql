@@ -1,0 +1,1 @@
+ALTER TABLE `cot_mavatars` ADD COLUMN `mav_text` varchar(255) NOT NULL;

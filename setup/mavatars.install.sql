@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `cot_mavatars` (
 	`mav_thumbpath` varchar(255) collate utf8_unicode_ci,
     `mav_filesize` int(11) NOT NULL,
 	`mav_desc` varchar(255) NOT NULL,
-	`mav_alt` varchar(255) NOT NULL,
+	`mav_text` varchar(255) NOT NULL,
 	`mav_order` int(11) NOT NULL,
 	`mav_date` int(11) NOT NULL,
 	`mav_downloads` int(11) NOT NULL default '0',

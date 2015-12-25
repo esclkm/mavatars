@@ -107,7 +107,8 @@ class mavatar_object
 			'FILEORDER' => cot_inputbox('text', $prefix.'order['.$this->id.']', $this->dbdata['mav_order'], 'maxlength="4" size="4"'),
 			'FILEDESC' => cot_inputbox('text', $prefix.'desc['.$this->id.']', $this->dbdata['mav_desc']),
 			'FILEDESCTEXT' => cot_textarea($prefix.'desc['.$this->id.']', $this->dbdata['mav_desc'], 2, 30),
-			'FILEALT' => cot_inputbox('text', $prefix.'alt['.$this->id.']', $this->dbdata['mav_alt']),
+			'FILETEXT' => cot_inputbox('text', $prefix.'text['.$this->id.']', $this->dbdata['mav_text']),
+			'FILETEXTTEXT' => cot_textarea($prefix.'text['.$this->id.']', $this->dbdata['mav_text'], 2, 30),
 		);
 		foreach ($cot_extrafields[$db_mavatars] as $exfld)
 		{
@@ -120,12 +121,12 @@ class mavatar_object
 
 	public function files($mainfile = true, $thumbs = true)
 	{
+		$file_list = array();
 		if(!$this->id)
 		{
-			return false;
+			return $file_list;
 		}
 		
-		$file_list = array();
 		if (file_exists($this->file_path()))
 		{
 			if ($this->is_image && $thumbs)
